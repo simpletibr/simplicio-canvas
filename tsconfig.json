@@ -2,7 +2,8 @@
   "compilerOptions": {
     "target": "ES2022", "useDefineForClassFields": true, "module": "ESNext",
     "moduleResolution": "Bundler", "strict": true, "noEmit": true,
-    "lib": ["ES2022", "DOM", "DOM.Iterable"], "skipLibCheck": true
+    "lib": ["ES2022", "DOM", "DOM.Iterable"], "skipLibCheck": true,
+    "jsx": "react-jsx", "resolveJsonModule": true, "types": ["vite/client", "node"]
   },
-  "include": ["src", "tests"]
+  "include": ["src", "tests", "server"]
 }

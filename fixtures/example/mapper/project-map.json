@@ -1,0 +1,163 @@
+{
+ "schema": "simplicio.project-map/v1",
+ "generated_at": "2026-09-29T13:38:01.783Z",
+ "entry_points": [
+  "simplicio_loop/cli.py"
+ ],
+ "files": [
+  {
+   "path": "README.md",
+   "language": "markdown",
+   "size_bytes": 285,
+   "roles": []
+  },
+  {
+   "path": "docs/ARCHITECTURE.md",
+   "language": "markdown",
+   "size_bytes": 286,
+   "roles": []
+  },
+  {
+   "path": "hooks/loop_stop.py",
+   "language": "python",
+   "size_bytes": 550,
+   "roles": []
+  },
+  {
+   "path": "pyproject.toml",
+   "language": "toml",
+   "size_bytes": 274,
+   "roles": [
+    "config"
+   ]
+  },
+  {
+   "path": "simplicio_loop/__init__.py",
+   "language": "python",
+   "size_bytes": 76,
+   "roles": []
+  },
+  {
+   "path": "simplicio_loop/cli.py",
+   "language": "python",
+   "size_bytes": 787,
+   "roles": [
+    "entrypoint"
+   ]
+  },
+  {
+   "path": "simplicio_loop/dev_cli.py",
+   "language": "python",
+   "size_bytes": 1267,
+   "roles": []
+  },
+  {
+   "path": "simplicio_loop/host_mode.py",
+   "language": "python",
+   "size_bytes": 441,
+   "roles": []
+  },
+  {
+   "path": "simplicio_loop/mapper_client.py",
+   "language": "python",
+   "size_bytes": 848,
+   "roles": []
+  },
+  {
+   "path": "simplicio_loop/mcp_server.py",
+   "language": "python",
+   "size_bytes": 632,
+   "roles": []
+  },
+  {
+   "path": "simplicio_loop/orchestrator.py",
+   "language": "python",
+   "size_bytes": 385,
+   "roles": []
+  },
+  {
+   "path": "simplicio_loop/plan_store.py",
+   "language": "python",
+   "size_bytes": 226,
+   "roles": []
+  },
+  {
+   "path": "simplicio_loop/prompts.py",
+   "language": "python",
+   "size_bytes": 1059,
+   "roles": []
+  },
+  {
+   "path": "simplicio_loop/report.py",
+   "language": "python",
+   "size_bytes": 185,
+   "roles": []
+  },
+  {
+   "path": "simplicio_loop/turbo.py",
+   "language": "python",
+   "size_bytes": 1564,
+   "roles": []
+  },
+  {
+   "path": "simplicio_loop/turbo_cli.py",
+   "language": "python",
+   "size_bytes": 2474,
+   "roles": []
+  },
+  {
+   "path": "simplicio_loop/turbo_provider.py",
+   "language": "python",
+   "size_bytes": 1127,
+   "roles": []
+  },
+  {
+   "path": "simplicio_loop/verify.py",
+   "language": "python",
+   "size_bytes": 595,
+   "roles": []
+  },
+  {
+   "path": "tests/test_dev_cli.py",
+   "language": "python",
+   "size_bytes": 275,
+   "roles": [
+    "test"
+   ]
+  },
+  {
+   "path": "tests/test_turbo_cli.py",
+   "language": "python",
+   "size_bytes": 329,
+   "roles": [
+    "test"
+   ]
+  }
+ ],
+ "modules": [
+  {
+   "name": ".",
+   "file_count": 2
+  },
+  {
+   "name": "docs",
+   "file_count": 1
+  },
+  {
+   "name": "hooks",
+   "file_count": 1
+  },
+  {
+   "name": "simplicio_loop",
+   "file_count": 14
+  },
+  {
+   "name": "tests",
+   "file_count": 2
+  }
+ ],
+ "producer": {
+  "component": "simplicio-mapper",
+  "version": "0.26.34"
+ }
+}

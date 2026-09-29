@@ -14,7 +14,7 @@
     "test": "vitest run",
     "test:coverage": "vitest run --coverage",
     "test:privacy": "vitest run tests/privacy.test.ts",
-    "test:a11y": "vitest run tests/a11y-contract.test.ts",
+    "test:a11y": "vitest run tests/a11y-contract.test.tsx",
     "benchmark:render": "vitest run tests/render-benchmark.test.ts",
     "test:compatibility": "vitest run tests/compatibility-matrix.test.ts",
     "verify:compatibility": "node scripts/verify-compatibility.mjs",
@@ -23,24 +23,36 @@
     "scan:mapper:matrix": "node scripts/scan-matrix-mapper.mjs",
     "verify:artifact": "node scripts/verify-artifact.mjs --require-checksum",
     "verify:runtime-budgets": "node scripts/verify-runtime-budgets.mjs",
-    "benchmark:webgl": "vitest run tests/instancing-benchmark.test.ts",
-    "test:onboarding": "vitest run tests/onboarding-usability.test.ts",
     "verify:pwa": "node scripts/verify-pwa.mjs",
     "verify:release": "node scripts/verify-release.mjs",
-    "test:usability": "vitest run tests/onboarding-metrics.test.ts tests/onboarding-usability.test.ts",
     "test:readiness": "vitest run tests/release-readiness.test.ts",
     "test:evidence": "vitest run tests/compatibility-evidence.test.ts",
     "verify:readiness": "node scripts/verify-readiness.mjs",
     "test:integration": "vitest run tests/integration-visual-edit-pipeline.test.ts",
-    "test:system": "vitest run tests/system-workspace-lifecycle.test.ts",
-    "test:regression": "vitest run tests/regression-fixed-defects.test.ts"
+    "test:system": "vitest run tests/system-flow-viewer.test.ts",
+    "test:regression": "vitest run tests/regression-fixed-defects.test.ts",
+    "fixtures": "vite-node scripts/build-fixtures.ts"
   },
-  "dependencies": { "three": "^0.178.0" },
+  "dependencies": {
+    "@dagrejs/dagre": "^3.1.1",
+    "@xyflow/react": "^12.12.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "smol-toml": "^1.9.0"
+  },
   "devDependencies": {
-    "@types/three": "^0.178.1",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/react": "^16.3.3",
+    "@types/node": "^24.19.0",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^5.2.0",
     "@vitest/coverage-v8": "^3.2.4",
+    "jsdom": "^30.1.1",
     "typescript": "^5.8.3",
     "vite": "^7.0.4",
+    "vite-node": "^3.2.4",
     "vitest": "^3.2.4"
-  }
+  },
+  "description": "Local-first 2D flow viewer: static flows from a GitHub project and step-by-step replays of real (or simulated) runs."
 }

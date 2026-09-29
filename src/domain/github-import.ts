@@ -6,8 +6,9 @@ export interface GitHubRepository {
 }
 
 export function normalizeGitHubRepository(input: string): GitHubRepository {
-  const value = input.trim().replace(/\.git$/, '')
-  const match = value.match(/^(?:https:\/\/github\.com\/)?([A-Za-z0-9-]+)\/([A-Za-z0-9_.-]+)$/)
+  // Accept what people paste from the address bar: with or without scheme and www., with a trailing slash or .git.
+  const value = input.trim().replace(/\/+$/, '').replace(/\.git$/, '')
+  const match = value.match(/^(?:(?:https?:\/\/)?(?:www\.)?github\.com\/)?([A-Za-z0-9-]+)\/([A-Za-z0-9_.-]+)$/)
   if (!match) throw new Error('Enter a valid public GitHub repository as owner/repository or https://github.com/owner/repository')
   const [, owner, repository] = match
   if (owner === '.' || owner === '..' || repository === '.' || repository === '..') throw new Error('Enter a valid public GitHub repository')

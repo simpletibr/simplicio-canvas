@@ -12,6 +12,10 @@ describe('GitHub repository import', () => {
     expect(normalizeGitHubRepository('wesleysimplicio/simplicio-loop').slug).toBe('wesleysimplicio/simplicio-loop')
   })
 
+  it.each(['github.com/octo/cat', 'https://github.com/octo/cat/', 'http://www.github.com/octo/cat.git', ' https://github.com/octo/cat '])('accepts what people paste from the address bar: %s', (value) => {
+    expect(normalizeGitHubRepository(value)).toMatchObject({ slug: 'octo/cat', cloneUrl: 'https://github.com/octo/cat.git' })
+  })
+
   it('builds a safe public API contents URL for the browser fallback', () => {
     expect(githubContentsUrl('wesleysimplicio', 'simplicio-loop', 'src/main.ts')).toBe('https://api.github.com/repos/wesleysimplicio/simplicio-loop/contents/src%2Fmain.ts')
   })
