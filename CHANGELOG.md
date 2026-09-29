@@ -17,6 +17,7 @@
 - Interface in Portuguese and English (was 15 locales for the old UI).
 - Removed: the Three.js workspace, the IDE-shell UI, `three`/`@types/three`, and the domain modules only that UI used
   (with their tests).
+- Python `async def` functions, which Mapper 0.26 does not index, are read from the source so MCP tools written that way are listed as entry points.
 - Docs: `docs/trace-format.md`, `docs/simulation.md`, new README and product spec.
 
 ## 2.13.0 — 2026-07-11

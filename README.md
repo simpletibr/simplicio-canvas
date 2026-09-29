@@ -89,6 +89,7 @@ Layout: `src/domain` (pure logic, no UI imports) · `src/ui` (React) · `src/sim
 ## Known limits and next layers
 
 - **Mapper cuts its call graph at 1,000 edges** and resolves calls lexically; large projects show partial flows (the UI says so). A next layer can ask Mapper per entry point (`simplicio-mapper ask … callees`) and show its `flows` effects (`fs-write`, `network`, `subprocess`).
+- **Mapper 0.26 does not index Python `async def`** (most MCP tools and web handlers). The viewer finds them in the source, so they show up as entry points and have details, but Mapper knows no calls to or from them and their flows are short.
 - **Live mode**: tail a growing trace file while a run is in progress.
 - **`simplicio-loop --trace`**: emit `simplicio.trace/v1` natively, with real timestamps, per-call cost and previews (turbo-run/v1 carries none of them).
 - **The proxy** for arbitrary LLM apps (documented in [docs/trace-format.md](docs/trace-format.md), not built).

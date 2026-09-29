@@ -293,3 +293,9 @@ export function earlyExitBefore(lines: string[], range: LineRange, callLine: num
   }
   return undefined
 }
+
+/** Python source with docstrings, other triple-quoted strings and comments blanked out; every line keeps its number. */
+export function blankPythonNoise(source: string): string {
+  const blanked = (text: string) => text.replace(/[^\n]/g, ' ')
+  return source.replace(/[rRuUbB]{0,2}("""|''')[\s\S]*?\1/g, blanked).replace(/#[^\n]*/g, blanked)
+}

@@ -85,6 +85,27 @@ describe('picking any function as a flow start', () => {
   })
 })
 
+describe('async functions that Mapper does not index', () => {
+  const source = ['from mcp.server.fastmcp import FastMCP', '', 'mcp = FastMCP("weather")', '', '', '@mcp.tool()', 'async def get_alerts(state: str) -> str:', '    """Get alerts for a US state."""', '    return state', '', '', 'async def helper():', '    text = "async def inside a string"', '    return text', '', '# async def commented_out():', 'def main():', '    mcp.run()', ''].join('\n')
+  const project = buildProject({
+    name: 'weather',
+    files: [{ path: 'weather.py', content: source, size: source.length }, { path: 'pyproject.toml', content: '[project.scripts]\nweather = "weather:main"\n', size: 44 }],
+    artifacts: { symbolIndex: { schema: 'simplicio.symbol-index/v1', symbols: [{ name: 'main', qualified_name: 'weather.py::main', kind: 'function', language: 'python', defined_in: 'weather.py', line: 17 }] } },
+  })
+
+  it('adds them as symbols, ignoring strings and comments, so MCP tools become entry points', () => {
+    expect([...project.symbols.keys()]).toEqual(['weather.py::get_alerts', 'weather.py::helper', 'weather.py::main'])
+    expect(project.entries.map((entry) => `${entry.kind}:${entry.name}`)).toEqual(['console_script:weather', 'mcp_tool:get_alerts'])
+    expect(project.entries[1]).toMatchObject({ symbol: 'weather.py::get_alerts', line: 7 })
+  })
+
+  it('describes them like any other function', () => {
+    const details = describeSymbol(project, 'weather.py::get_alerts')!
+    expect(details).toMatchObject({ signature: 'async def get_alerts(state: str) -> str', summary: 'Get alerts for a US state.', params: ['state: str'], returns: 'str' })
+    expect(details.callees).toEqual([])
+  })
+})
+
 describe('project model edge cases', () => {
   const svc = ['"""Service module."""', '', '', 'class TaskService:', '    """Runs tasks."""', '', '    def __init__(self, repo):', '        self.repo = repo', '', '    def run(self, task):', '        """Run one task."""', '        self.validate(task)', '        return helper(task)', '', '    def validate(self, task):', '        if not task:', '            raise ValueError("empty")', '', '', 'def helper(task):', '    return str(task)', ''].join('\n')
   const artifacts = {

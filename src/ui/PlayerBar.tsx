@@ -38,7 +38,7 @@ export function PlayerBar({ t, events, state, dispatch, follow, onFollow }: Prop
           )
         })}
       </div>
-      <div className="now" role="status" aria-live="polite">
+      <div className="now">
         {active ? <><KindGlyph kind={active.kind} /> <strong>{state.index + 1}/{events.length}</strong> <span className="now-name">{active.name}</span>{active.end !== null ? <span className="muted"> · {formatDuration(active.end - active.start)}</span> : null}{state.finished ? <span className="chip"> {t('player.finished')}</span> : null}</> : <span className="muted">{t('run.simulateFirst')}</span>}
       </div>
     </section>

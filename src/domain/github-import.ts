@@ -15,7 +15,3 @@ export function normalizeGitHubRepository(input: string): GitHubRepository {
   const slug = `${owner}/${repository}`
   return { owner, repository, slug, cloneUrl: `https://github.com/${slug}.git` }
 }
-
-export function githubContentsUrl(owner: string, repository: string, filePath: string) {
-  return `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repository)}/contents/${encodeURIComponent(filePath)}`
-}

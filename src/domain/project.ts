@@ -7,7 +7,7 @@ import { analyzeProject, type AnalyzedFile, type ProjectAnalysis, type SourceFil
 import { detectEntryPoints, type EntryPoint } from './entrypoints'
 import { pythonImports, type FileImport } from './imports'
 import { parseMapperArtifacts, type MapperArtifacts, type MapperModel, type MapperCall, type MapperSymbol } from './mapper'
-import { bodyRange, docOf, earlyExitBefore, excerpt, guardsAt, languageFamily, paramsOf, raisesIn, signatureOf, type Guard, type LineRange } from './source'
+import { blankPythonNoise, bodyRange, docOf, earlyExitBefore, excerpt, guardsAt, languageFamily, paramsOf, raisesIn, signatureOf, type Guard, type LineRange } from './source'
 
 export interface ProjectSymbol extends MapperSymbol { label: string; owner?: string }
 /** `after` is set when an earlier return/raise may end the function before this call runs. */
@@ -41,7 +41,7 @@ export function buildProject(input: ProjectInput): Project {
   const cache: Project['cache'] = { lines: new Map(), bodies: new Map(), calls: new Map() }
   const project: Project = { name: input.name, analysis, files, symbols: new Map(), symbolsByFile: new Map(), imports: [], entries: [], mapper, issues: parsed?.issues ?? [], rawFrom: new Map(), rawTo: new Map(), unresolved: new Map(), cache }
 
-  const symbols = (mapper?.symbols ?? []).filter((symbol) => files.has(symbol.file)).sort((a, b) => a.file.localeCompare(b.file) || a.line - b.line)
+  const symbols = [...(mapper?.symbols ?? []), ...(mapper ? missingAsyncSymbols(files, mapper.symbols) : [])].filter((symbol) => files.has(symbol.file)).sort((a, b) => a.file.localeCompare(b.file) || a.line - b.line)
   for (const symbol of symbols) {
     const entry: ProjectSymbol = { ...symbol, label: symbol.name }
     project.symbols.set(symbol.id, entry)
@@ -81,6 +81,28 @@ export function buildProject(input: ProjectInput): Project {
     project.issues.push(...detected.issues)
   }
   return project
+}
+
+/**
+ * Mapper's Python symbol index skips `async def` (0.26.x), which is how most MCP tools and web handlers are written.
+ * They are added here, named the way Mapper names its symbols, so they can be entry points and have details.
+ * Mapper knows no calls to or from them, so their flows are short.
+ */
+function missingAsyncSymbols(files: Map<string, AnalyzedFile>, known: MapperSymbol[]): MapperSymbol[] {
+  const have = new Set(known.map((symbol) => symbol.id))
+  const found: MapperSymbol[] = []
+  for (const file of files.values()) {
+    if (!file.path.endsWith('.py') || !file.content.includes('async')) continue
+    blankPythonNoise(file.content).split('\n').forEach((line, index) => {
+      const match = /^\s*async\s+def\s+(\w+)/.exec(line)
+      if (!match) return
+      const id = `${file.path}::${match[1]}`
+      if (have.has(id)) return
+      have.add(id)
+      found.push({ id, name: match[1], kind: 'function', file: file.path, line: index + 1, language: 'python' })
+    })
+  }
+  return found
 }
 
 function linesOf(project: Project, path: string): string[] {

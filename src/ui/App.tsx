@@ -1,5 +1,5 @@
 import { ReactFlowProvider } from '@xyflow/react'
-import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { policyFor } from '../domain/demo-policy'
 import { functionEntry, type EntryPoint } from '../domain/entrypoints'
 import { normalizeGitHubRepository } from '../domain/github-import'
@@ -93,7 +93,8 @@ export function App({ demo = __DEMO_MODE__ }: { demo?: boolean }) {
   }, [notice])
 
   /* ─────────────── derived graph, layout and replay ─────────────── */
-  const realGraph = useMemo(() => (real ? traceToFlow(real.trace, 'real') : null), [real])
+  // Each loaded trace gets its own graph id, so the canvas remounts and fits the new graph.
+  const realGraph = useMemo(() => (real ? traceToFlow(real.trace, `real:${real.title}:${real.trace.events.length}`) : null), [real])
   const run = runMode === 'simulated' ? (sim ? { graph: sim.result.graph, trace: sim.result.trace, notes: sim.result.notes } : null) : real && realGraph ? { graph: realGraph, trace: real.trace, notes: [] as string[] } : null
   const events = useMemo(() => run?.trace.events ?? [], [run?.trace])
   const graph: FlowGraph | null = useMemo(() => {
@@ -153,7 +154,7 @@ export function App({ demo = __DEMO_MODE__ }: { demo?: boolean }) {
   const importGitHub = async () => {
     if (!policy.canImportGitHub) return
     let repo
-    try { repo = normalizeGitHubRepository(link) } catch (error) { notify('error', error instanceof Error ? error.message : String(error)); return }
+    try { repo = normalizeGitHubRepository(link) } catch { notify('error', t('github.invalid')); return }
     setBusy(true)
     notify('info', t('github.busy', { repo: repo.slug }))
     try {
@@ -221,7 +222,7 @@ export function App({ demo = __DEMO_MODE__ }: { demo?: boolean }) {
     const params: SimParams = { request: request.trim() ? request : t('run.example1'), choice: simChoice, depth: simDepth, ...override }
     setRequest(params.request)
     setSimChoice(params.choice)
-    runSimulation(params, locale)
+    try { runSimulation(params, locale) } catch (error) { notify('error', error instanceof Error ? error.message : String(error)); return }
     setRunMode('simulated')
     setView('run')
     setSelected(null)
@@ -263,7 +264,7 @@ export function App({ demo = __DEMO_MODE__ }: { demo?: boolean }) {
       <TopBar
         t={t} locale={locale} onLocale={setLocale} view={view} onView={selectView} policy={policy} demo={demo}
         link={link} onLink={setLink} onImport={importGitHub} busy={busy} onFolder={openFolder}
-        onExample={() => adopt(bundledProject(), EXAMPLE_NAME)} onExport={() => setExporting(true)} canExport={Boolean(graph?.nodes.length)}
+        onExample={() => { const next = bundledProject(); adopt(next, t('github.done', { name: EXAMPLE_NAME, files: next.files.size, symbols: next.symbols.size, entries: next.entries.length })) }} onExport={() => setExporting(true)} canExport={Boolean(graph?.nodes.length)}
       />
       <div className="body">
         <aside className="side" aria-label={t('side.aria')}>
@@ -284,7 +285,7 @@ export function App({ demo = __DEMO_MODE__ }: { demo?: boolean }) {
           <ReactFlowProvider>
             <FlowCanvas
               graph={graph} layout={layout} runState={runState} selectedId={view === 'run' ? null : selected} onSelect={onSelect} onExpand={onExpand} onToggle={onToggle}
-              draggable={policy.canMoveNodes} follow={follow} reducedMotion={reducedMotion} t={t} empty={canvasEmpty}
+              draggable={policy.canMoveNodes && view !== 'run'} follow={follow} reducedMotion={reducedMotion} t={t} empty={canvasEmpty}
             />
           </ReactFlowProvider>
           {view === 'run' ? <PlayerBar t={t} events={events} state={player} dispatch={dispatch} follow={follow} onFollow={setFollow} /> : null}

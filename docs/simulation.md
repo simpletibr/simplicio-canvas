@@ -71,7 +71,8 @@ Whatever static analysis cannot decide is marked `unknown` instead of guessed:
 | Mapper found several possible targets for a call (`ambiguous`) | an extra *ambiguous call* step lists the candidates |
 
 The heuristics read indentation and braces of well-formatted code, and Mapper's resolution is lexical: treat the walk as
-a guide, not proof. (Mapper also cuts its call graph at 1,000 edges; the UI warns when that happened.)
+a guide, not proof. (Mapper also cuts its call graph at 1,000 edges; the UI warns when that happened. It does not index Python
+`async def` either, so those functions are found in the source but have no calls in the walk.)
 
 ## Editing the explanations
 
