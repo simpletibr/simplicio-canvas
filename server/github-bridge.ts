@@ -116,6 +116,10 @@ export function createImportHandler(options: { workspaceRoot: string; runner?: B
     response.setHeader('Cache-Control', 'no-store')
     const send = (status: number, body: unknown) => { response.statusCode = status; response.end(JSON.stringify(body)) }
     if (request.method !== 'POST') return send(405, { error: 'POST required' })
+    // A page on another site must not be able to make this machine clone repositories: browsers label such requests,
+    // and a JSON content type forces a CORS preflight that this server never answers.
+    if (request.headers['sec-fetch-site'] === 'cross-site') return send(403, { error: 'Cross-site requests are not allowed' })
+    if (!String(request.headers['content-type'] ?? '').toLowerCase().startsWith('application/json')) return send(415, { error: 'Send application/json' })
     try {
       const parsed = JSON.parse(await readBody(request)) as { repository?: unknown }
       const repository = normalizeGitHubRepository(String(parsed.repository ?? ''))

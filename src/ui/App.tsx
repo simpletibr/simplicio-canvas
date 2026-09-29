@@ -105,14 +105,22 @@ export function App({ demo = __DEMO_MODE__ }: { demo?: boolean }) {
   const runState = useMemo(() => (view === 'run' && graph && events.length ? computeRunState(graph, events, player.index) : undefined), [view, graph, events, player.index])
 
   useEffect(() => { dispatch({ type: 'load', dwell: events.map(dwellFor) }) }, [events])
+  // The clock runs outside React: state only changes when the current step is due, not on every animation frame.
+  const { playing, index: activeIndex, speed, elapsed, dwell } = player
   useEffect(() => {
-    if (!player.playing) return
+    if (!playing) return
     let last = performance.now()
+    let waited = 0
     let frame = 0
-    const step = (now: number) => { dispatch({ type: 'tick', dt: Math.min(250, now - last) }); last = now; frame = requestAnimationFrame(step) }
+    const step = (now: number) => {
+      waited += Math.min(250, now - last)
+      last = now
+      if (waited * speed >= (dwell[activeIndex] ?? 0) - elapsed) { dispatch({ type: 'tick', dt: waited }); waited = 0 }
+      frame = requestAnimationFrame(step)
+    }
     frame = requestAnimationFrame(step)
     return () => cancelAnimationFrame(frame)
-  }, [player.playing])
+  }, [playing, activeIndex, speed, elapsed, dwell])
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {

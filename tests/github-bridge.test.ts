@@ -118,7 +118,7 @@ describe('importRepository', () => {
 })
 
 describe('import request handler', () => {
-  const request = (method: string, body: string) => Object.assign(Readable.from([Buffer.from(body)]), { method, headers: {} })
+  const request = (method: string, body: string, headers: Record<string, string> = { 'content-type': 'application/json' }) => Object.assign(Readable.from([Buffer.from(body)]), { method, headers })
   const response = () => { const state = { status: 200, body: '', headers: {} as Record<string, string> }; return { state, res: { statusCode: 200, setHeader(name: string, value: string) { state.headers[name.toLowerCase()] = value }, end(text: string) { state.body = text; state.status = this.statusCode } } } }
 
   it('answers GET with 405, bad JSON and bad repositories with 400, and success with the payload', async () => {
@@ -129,6 +129,17 @@ describe('import request handler', () => {
     out = response(); await handler(request('POST', JSON.stringify({ repository: 'https://github.com/octo/cat' })) as never, out.res as never)
     expect(out.state.status).toBe(200); expect(out.state.headers['content-type']).toContain('application/json')
     expect(JSON.parse(out.state.body)).toMatchObject({ name: 'octo/cat' })
+  })
+
+  it('refuses cross-site requests and anything that is not JSON, so a web page cannot make this machine clone repositories', async () => {
+    const runner = fakeRunner()
+    const handler = createImportHandler({ workspaceRoot: dir, runner })
+    const body = JSON.stringify({ repository: 'octo/cat' })
+    let out = response(); await handler(request('POST', body, { 'content-type': 'application/json', 'sec-fetch-site': 'cross-site' }) as never, out.res as never); expect(out.state.status).toBe(403)
+    out = response(); await handler(request('POST', body, { 'content-type': 'text/plain' }) as never, out.res as never); expect(out.state.status).toBe(415)
+    out = response(); await handler(request('POST', body, {}) as never, out.res as never); expect(out.state.status).toBe(415)
+    expect(runner.calls).toEqual([])
+    out = response(); await handler(request('POST', body, { 'content-type': 'application/json; charset=utf-8', 'sec-fetch-site': 'same-origin' }) as never, out.res as never); expect(out.state.status).toBe(200)
   })
 
   it('rejects oversized bodies', async () => {
