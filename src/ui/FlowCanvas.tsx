@@ -49,10 +49,12 @@ export function FlowCanvas(props: FlowCanvasProps) {
   const actions = useMemo(() => ({ expand: onExpand, toggle: onToggle, t }), [onExpand, onToggle, t])
 
   const onNodesChange = useCallback((changes: NodeChange<Node<CardData>>[]) => {
+    // Enter or Space on a focused node arrives as a selection change: keep the canvas usable from the keyboard.
+    for (const change of changes) if (change.type === 'select' && change.selected) onSelect(change.id)
     const moved = changes.filter((change): change is Extract<NodeChange<Node<CardData>>, { type: 'position' }> => change.type === 'position' && change.position !== undefined)
     if (!moved.length) return
     setOverrides((current) => { const next = new Map(current); for (const change of moved) next.set(change.id, change.position!); return next })
-  }, [])
+  }, [onSelect])
 
   if (!graph || !layout || !model || !graph.nodes.length) return <div className="canvas-empty" role="status">{empty}</div>
   return (

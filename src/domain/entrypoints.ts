@@ -8,13 +8,30 @@ import { parse as parseToml } from 'smol-toml'
 import type { SourceFileInput } from './analyzer'
 import type { MapperSymbol } from './mapper'
 
-export type EntryKind = 'console_script' | 'cli_command' | 'mcp_tool' | 'main'
+export type EntryKind = 'console_script' | 'cli_command' | 'mcp_tool' | 'main' | 'function'
 export interface EntryPoint { id: string; kind: EntryKind; name: string; symbol: string; file: string; line: number; evidence: string }
 export interface EntryInput { files: SourceFileInput[]; symbols: MapperSymbol[]; entryFiles?: string[] }
 
 const PRIORITY: EntryKind[] = ['console_script', 'cli_command', 'mcp_tool', 'main']
+
+/** Any function can be the start of a flow: the user picks it from the symbol list instead of a detected entry point. */
+export function functionEntry(symbol: MapperSymbol & { label?: string }): EntryPoint {
+  return { id: `function:${symbol.label ?? symbol.name}:${symbol.id}`, kind: 'function', name: symbol.label ?? symbol.name, symbol: symbol.id, file: symbol.file, line: symbol.line, evidence: 'picked from the symbol list' }
+}
 const isTest = (path: string) => /(^|\/)(tests?|__tests__|spec)(\/|$)|(^|\/)test_[^/]*$|\.(test|spec)\.[a-z]+$/i.test(path)
 const isRecord = (value: unknown): value is Record<string, unknown> => typeof value === 'object' && value !== null && !Array.isArray(value)
+
+/** The explicit name in a decorator's arguments: `("serve")` or `name="serve"`, ignoring nested dicts and lists. */
+function explicitName(args: string): string | undefined {
+  let depth = 0
+  let top = ''
+  for (const char of args) {
+    if ('([{'.includes(char)) depth += 1
+    else if (')]}'.includes(char)) depth -= 1
+    else if (depth === 0) top += char
+  }
+  return /\bname\s*=\s*["']([^"']+)["']/.exec(top)?.[1] ?? /^\s*["']([^"']+)["']/.exec(top)?.[1]
+}
 
 export function detectEntryPoints(input: EntryInput): { entries: EntryPoint[]; issues: string[] } {
   const issues: string[] = []
@@ -27,7 +44,7 @@ export function detectEntryPoints(input: EntryInput): { entries: EntryPoint[]; i
   }
   const files = [...input.files].sort((a, b) => a.path.localeCompare(b.path))
   const add = (kind: EntryKind, name: string, symbol: MapperSymbol | undefined, evidence: string) => {
-    if (symbol) found.push({ id: `${kind}:${name}`, kind, name, symbol: symbol.id, file: symbol.file, line: symbol.line, evidence })
+    if (symbol) found.push({ id: `${kind}:${name}:${symbol.id}`, kind, name, symbol: symbol.id, file: symbol.file, line: symbol.line, evidence })
   }
   const inFile = (path: string, name: string, line?: number) => (symbolsByFile.get(path) ?? []).find((symbol) => symbol.name === name && (line === undefined || symbol.line === line)) ?? (symbolsByFile.get(path) ?? []).find((symbol) => symbol.name === name)
   const modulePath = (module: string) => {
@@ -79,8 +96,7 @@ export function detectEntryPoints(input: EntryInput): { entries: EntryPoint[]; i
           while (at < lines.length && (/^\s*@/.test(lines[at]) || !lines[at].trim())) at += 1
           const def = definition.exec(lines[at] ?? '')
           if (!def) return
-          const args = decorator[3] ?? ''
-          const explicit = /(?:name\s*=\s*)?["']([\w.:-]+)["']/.exec(args)?.[1]
+          const explicit = explicitName(decorator[3] ?? '')
           const kind: EntryKind = decorator[2] === 'tool' ? 'mcp_tool' : 'cli_command'
           const name = explicit ?? (kind === 'mcp_tool' ? def[1] : def[1].replace(/_/g, '-'))
           add(kind, name, inFile(file.path, def[1], at + 1), kind === 'mcp_tool' ? `@${decorator[1]}.tool() in ${file.path}` : `@${decorator[1]}.${decorator[2]}() in ${file.path}`)
@@ -118,7 +134,7 @@ export function detectEntryPoints(input: EntryInput): { entries: EntryPoint[]; i
     .map((entry, index) => ({ entry, index }))
     .sort((a, b) => PRIORITY.indexOf(a.entry.kind) - PRIORITY.indexOf(b.entry.kind) || (a.entry.kind === 'main' ? a.entry.file.localeCompare(b.entry.file) : a.index - b.index))
     .map(({ entry }) => entry)
-    .filter((entry) => { const key = `${entry.kind === 'mcp_tool' ? entry.id : entry.symbol}`; if (seen.has(key)) return false; seen.add(key); return true })
+    .filter((entry) => { const key = entry.kind === 'mcp_tool' ? entry.id : entry.symbol; if (seen.has(key)) return false; seen.add(key); return true })
   const namedSymbols = new Set(entries.filter((entry) => entry.kind !== 'main').map((entry) => entry.symbol))
   return { entries: entries.filter((entry) => entry.kind !== 'main' || !namedSymbols.has(entry.symbol)), issues }
 }

@@ -1,6 +1,6 @@
 {
  "schema": "simplicio.project-map/v1",
- "generated_at": "2026-09-29T13:38:01.783Z",
+ "generated_at": "2026-09-29T14:26:00.227Z",
  "entry_points": [
   "simplicio_loop/cli.py"
  ],

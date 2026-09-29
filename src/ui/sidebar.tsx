@@ -3,12 +3,12 @@ import { LAYERS, type LayerId } from '../domain/architecture'
 import type { EntryKind, EntryPoint } from '../domain/entrypoints'
 import type { RequestShape } from '../domain/request'
 import type { TraceEvent } from '../domain/trace'
-import type { Project } from '../domain/project'
+import { callRoots, findSymbols, type Project } from '../domain/project'
 import { SAMPLE_TRACES } from './loaders'
 import type { Translate } from './messages'
 import { KindGlyph } from './nodes'
 
-const ENTRY_ORDER: EntryKind[] = ['console_script', 'cli_command', 'mcp_tool', 'main']
+const ENTRY_ORDER: EntryKind[] = ['console_script', 'cli_command', 'mcp_tool', 'main', 'function']
 
 export function ArchitectureSide({ t, project, onExpandAll, onCollapseAll }: { t: Translate; project: Project; onExpandAll(): void; onCollapseAll(): void }) {
   return (
@@ -26,25 +26,29 @@ export function ArchitectureSide({ t, project, onExpandAll, onCollapseAll }: { t
   )
 }
 
-export interface FlowsSideProps { t: Translate; project: Project; entryId: string | null; onEntry(id: string): void; depth: number; onDepth(value: number): void }
+export interface FlowsSideProps { t: Translate; project: Project; entries: EntryPoint[]; entryId: string | null; onEntry(id: string): void; onPickFunction(symbolId: string): void; depth: number; onDepth(value: number): void }
 
-export function FlowsSide({ t, project, entryId, onEntry, depth, onDepth }: FlowsSideProps) {
+export function FlowsSide({ t, project, entries, entryId, onEntry, onPickFunction, depth, onDepth }: FlowsSideProps) {
   const [filter, setFilter] = useState('')
   const groups = useMemo(() => {
     const needle = filter.trim().toLowerCase()
-    const matching = project.entries.filter((entry) => !needle || `${entry.name} ${entry.file}`.toLowerCase().includes(needle))
+    const matching = entries.filter((entry) => !needle || `${entry.name} ${entry.file}`.toLowerCase().includes(needle))
     return ENTRY_ORDER.map((kind) => ({ kind, entries: matching.filter((entry) => entry.kind === kind) })).filter((group) => group.entries.length)
-  }, [project, filter])
+  }, [entries, filter])
+  const matches = useMemo(() => findSymbols(project, filter), [project, filter])
+  const roots = useMemo(() => (project.symbols.size ? callRoots(project, 8).filter((root) => !entries.some((entry) => entry.symbol === root.id)) : []), [project, entries])
+  const suggestions = filter.trim().length >= 2 ? matches : roots
+  const hasFlows = Boolean(project.mapper && project.symbols.size)
   return (
     <div className="side-body">
       <p className="muted">{t('flow.hint')}</p>
-      {project.mapper && project.symbols.size ? (
+      {hasFlows ? (
         <>
           <input type="search" className="input" value={filter} onChange={(event) => setFilter(event.target.value)} placeholder={t('side.filter')} aria-label={t('side.filter')} />
           <label className="inline">{t('flow.depth')}
             <select value={depth} onChange={(event) => onDepth(Number(event.target.value))}>{[1, 2, 3, 4, 5].map((value) => <option key={value} value={value}>{value}</option>)}</select>
           </label>
-          {groups.length ? groups.map((group) => (
+          {groups.map((group) => (
             <section key={group.kind} className="entry-group">
               <h3>{t(`entry.${group.kind}` as 'entry.main')} <span className="count">{group.entries.length}</span></h3>
               <ul className="entries">
@@ -57,9 +61,25 @@ export function FlowsSide({ t, project, entryId, onEntry, depth, onDepth }: Flow
                 ))}
               </ul>
             </section>
-          )) : <p className="muted">{t('side.noEntries')}</p>}
+          ))}
+          {!groups.length && !suggestions.length ? <p className="muted">{t('side.noEntries')}</p> : null}
+          {suggestions.length ? (
+            <section className="entry-group">
+              <h3>{filter.trim().length >= 2 ? t('side.functions') : t('side.roots')} <span className="count">{suggestions.length}</span></h3>
+              <ul className="entries">
+                {suggestions.map((symbol) => (
+                  <li key={symbol.id}>
+                    <button type="button" className="entry" onClick={() => onPickFunction(symbol.id)}>
+                      <KindGlyph kind="function" /><span className="entry-name">{symbol.label}</span>{' '}<span className="entry-file">{symbol.file}:{symbol.line}</span>
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
         </>
       ) : <p className="muted">{t('side.noMapper')}</p>}
+      {project.mapper?.coverage?.truncated ? <p className="warn">{t('side.truncated', { emitted: project.mapper.coverage.emitted ?? '?', observed: project.mapper.coverage.observed ?? '?' })}</p> : null}
       <p className="muted small-print">{t('side.stats', { files: project.files.size, symbols: project.symbols.size, calls: project.mapper?.calls.length ?? 0 })}{project.mapper?.producer?.version ? ` · ${t('side.mapper', { version: project.mapper.producer.version })}` : ''}</p>
     </div>
   )

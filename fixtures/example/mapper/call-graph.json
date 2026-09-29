@@ -956,7 +956,9 @@
  "coverage": {
   "status": "degraded",
   "ambiguous_relations": 4,
-  "truncated": false
+  "truncated": false,
+  "observed_edges": 64,
+  "emitted_edges": 64
  },
  "producer": {
   "component": "simplicio-mapper",

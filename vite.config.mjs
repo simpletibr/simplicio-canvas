@@ -1,12 +1,14 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
+import { cspPlugin } from './server/csp.ts'
 import { githubImportPlugin } from './server/github-bridge.ts'
 
 export default defineConfig({
   base: process.env.VITE_BASE_PATH ?? '/',
   define: { __DEMO_MODE__: JSON.stringify(process.env.VITE_CANVAS_DEMO === 'true') },
-  server: { host: '127.0.0.1' },
-  plugins: [react(), githubImportPlugin()],
+  // Imported repositories are cloned under .simplicio/workspaces; their index.html or tsconfig.json must not trigger page reloads mid-import.
+  server: { host: '127.0.0.1', watch: { ignored: ['**/.simplicio/**'] } },
+  plugins: [react(), githubImportPlugin(), cspPlugin()],
   test: {
     exclude: [
       '**/node_modules/**',

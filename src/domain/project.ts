@@ -122,9 +122,17 @@ export function callsOf(project: Project, id: string): ProjectCall[] {
   return calls
 }
 
+/** Calls Mapper could not resolve to one target. Edges for the same call site are folded into one entry with all its candidates. */
 export function ambiguousOf(project: Project, id: string): AmbiguousCall[] {
   const range = bodyOf(project, id)
-  return (project.rawFrom.get(id) ?? []).filter((raw) => raw.status !== 'resolved' && raw.line !== undefined && inside(range, raw.line)).map((raw) => ({ line: raw.line!, candidates: raw.candidates ?? [] }))
+  const sites = new Map<string, AmbiguousCall>()
+  for (const raw of project.rawFrom.get(id) ?? []) {
+    if (raw.status === 'resolved' || raw.line === undefined || !inside(range, raw.line)) continue
+    const site = sites.get(`${raw.line}:${raw.to.split('::')[1] ?? raw.to}`) ?? { line: raw.line, candidates: [] }
+    for (const candidate of raw.candidates?.length ? raw.candidates : [raw.to]) if (!site.candidates.includes(candidate)) site.candidates.push(candidate)
+    sites.set(`${raw.line}:${raw.to.split('::')[1] ?? raw.to}`, site)
+  }
+  return [...sites.values()].sort((a, b) => a.line - b.line)
 }
 
 export function callersOf(project: Project, id: string): ProjectCall[] {
@@ -181,4 +189,25 @@ export function describeSymbol(project: Project, id: string): SymbolDetails | un
     details.raises = raisesIn(lines, range, family)
   }
   return details
+}
+
+/** Functions that call others but are called by nobody: the natural starts of a call graph. Most callees first. */
+export function callRoots(project: Project, limit = 8): ProjectSymbol[] {
+  const roots: Array<{ symbol: ProjectSymbol; callees: number }> = []
+  for (const symbol of project.symbols.values()) {
+    if (symbol.kind === 'class' || /(^|\/)(tests?|__tests__)(\/|$)|(^|\/)test_/.test(symbol.file)) continue
+    const callees = new Set(callsOf(project, symbol.id).map((call) => call.to)).size
+    if (callees && !callersOf(project, symbol.id).length) roots.push({ symbol, callees })
+  }
+  return roots.sort((a, b) => b.callees - a.callees || a.symbol.id.localeCompare(b.symbol.id)).slice(0, limit).map((entry) => entry.symbol)
+}
+
+/** Functions whose name or file matches a search text, shortest names first. */
+export function findSymbols(project: Project, text: string, limit = 20): ProjectSymbol[] {
+  const needle = text.trim().toLowerCase()
+  if (needle.length < 2) return []
+  return [...project.symbols.values()]
+    .filter((symbol) => symbol.kind !== 'class' && `${symbol.label} ${symbol.file}`.toLowerCase().includes(needle))
+    .sort((a, b) => Number(b.label.toLowerCase() === needle) - Number(a.label.toLowerCase() === needle) || a.label.length - b.label.length || a.id.localeCompare(b.id))
+    .slice(0, limit)
 }

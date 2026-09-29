@@ -87,6 +87,24 @@ describe('graph layout', () => {
     }
   })
 
+  it('packs nodes that have no edges into a compact grid instead of one very tall column', () => {
+    const nodes = Array.from({ length: 30 }, (_, index) => node(`n${index}`))
+    const { positions, width, height } = layoutGraph(graph(nodes, []))
+    expect(positions.size).toBe(30)
+    expect(Math.max(width, height) / Math.min(width, height)).toBeLessThan(2.5)
+    const boxes = [...positions.values()]
+    for (let i = 0; i < boxes.length; i += 1) for (let j = i + 1; j < boxes.length; j += 1) expect(overlap(boxes[i], boxes[j])).toBe(false)
+  })
+
+  it('places unconnected nodes below the connected part without overlapping it', () => {
+    const nodes = ['a', 'b', 'c', 'x', 'y', 'z'].map((id) => node(id))
+    const { positions } = layoutGraph(graph(nodes, [edge('a', 'b'), edge('b', 'c')]))
+    const connectedBottom = Math.max(...['a', 'b', 'c'].map((id) => positions.get(id)!.y + positions.get(id)!.height))
+    for (const id of ['x', 'y', 'z']) expect(positions.get(id)!.y).toBeGreaterThanOrEqual(connectedBottom)
+    const boxes = [...positions.values()]
+    for (let i = 0; i < boxes.length; i += 1) for (let j = i + 1; j < boxes.length; j += 1) expect(overlap(boxes[i], boxes[j])).toBe(false)
+  })
+
   it('handles a few hundred nodes within a second', () => {
     const nodes = Array.from({ length: 400 }, (_, index) => node(`n${index}`))
     const edges = nodes.slice(1).map((item, index) => edge(`n${Math.floor(index / 3)}`, item.id))

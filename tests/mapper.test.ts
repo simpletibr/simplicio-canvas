@@ -23,7 +23,7 @@ const callGraph = {
     'not an edge',
   ],
   unresolved: [{ source_file: 'app/cli.py', line: 9, queried_symbol: 'ArgumentParser' }, { source_file: 'app/cli.py', queried_symbol: 'argparse', kind: 'import' }],
-  coverage: { status: 'degraded', ambiguous_relations: 1, truncated: false },
+  coverage: { status: 'degraded', ambiguous_relations: 1, truncated: true, observed_edges: 8828, emitted_edges: 1000, omitted_edges: 7828 },
   producer: { component: 'simplicio-mapper', version: '0.26.34', canonical_digest: 'sha256:x' },
 }
 const projectMap = {
@@ -53,7 +53,7 @@ describe('Mapper artifact parsing', () => {
     expect(model.unresolved).toEqual([{ file: 'app/cli.py', line: 9, name: 'ArgumentParser', kind: undefined }, { file: 'app/cli.py', line: undefined, name: 'argparse', kind: 'import' }])
     expect(model.entryFiles).toEqual(['app/cli.py'])
     expect(model.files.map((file) => file.path)).toEqual(['app/cli.py', 'pyproject.toml'])
-    expect(model.coverage).toMatchObject({ status: 'degraded', ambiguous: 1 })
+    expect(model.coverage).toEqual({ status: 'degraded', ambiguous: 1, truncated: true, observed: 8828, emitted: 1000 })
     expect(model.producer).toMatchObject({ component: 'simplicio-mapper', version: '0.26.34' })
   })
 

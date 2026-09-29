@@ -22,7 +22,7 @@ export function loadTraceText(text: string): TraceParseResult {
   return looksLikeTurbo(text) ? turboToTrace(text) : parseTrace(text)
 }
 
-const SKIP_DIR = /(^|\/)(node_modules|\.git|dist|build|coverage|\.venv|venv|vendor|target|__pycache__|\.next|\.simplicio)(\/|$)/
+const SKIP_DIR = /(^|\/)(node_modules|\.git|dist|build|coverage|\.venv|venv|vendor|target|__pycache__|\.next|\.simplicio|\.simplicio-loop)(\/|$)/
 const SKIP_FILE = /^(?:\.env.*|id_(?:rsa|dsa|ecdsa|ed25519)(?:\.pub)?|.*\.(?:pem|key|p12|pfx|min\.js|min\.css|map|png|jpe?g|gif|webp|ico|pdf|zip|gz|woff2?|ttf|mp[34]|mov|wasm|lock)|package-lock\.json)$/i
 const ARTIFACTS = { 'project-map.json': 'projectMap', 'call-graph.json': 'callGraph', 'symbol-index.json': 'symbolIndex' } as const
 

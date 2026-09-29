@@ -1,6 +1,7 @@
 import { ReactFlowProvider } from '@xyflow/react'
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { policyFor } from '../domain/demo-policy'
+import { functionEntry, type EntryPoint } from '../domain/entrypoints'
 import { normalizeGitHubRepository } from '../domain/github-import'
 import { buildArchitecture, buildEntryFlow, defaultExpanded, groupIds } from '../domain/flows'
 import type { FlowGraph } from '../domain/flow-graph'
@@ -64,7 +65,8 @@ export function App({ demo = __DEMO_MODE__ }: { demo?: boolean }) {
   const [entryId, setEntryId] = useState<string | null>(project.entries[0]?.id ?? null)
   const [entryDepth, setEntryDepth] = useState(2)
   const [entryOpen, setEntryOpen] = useState<Set<string>>(new Set())
-  const [selected, setSelected] = useState<string | null>(null)
+  const [picked, setPicked] = useState<EntryPoint[]>([])
+  const [selected, setSelected] = useState<string | null>(() => project.entries[0]?.symbol ?? null)
 
   const [runMode, setRunMode] = useState<'simulated' | 'real'>('simulated')
   const [request, setRequest] = useState('')
@@ -81,7 +83,8 @@ export function App({ demo = __DEMO_MODE__ }: { demo?: boolean }) {
   const [exporting, setExporting] = useState(false)
   const [dragging, setDragging] = useState(false)
 
-  const entry = project.entries.find((candidate) => candidate.id === entryId) ?? null
+  const entries = useMemo(() => [...project.entries, ...picked], [project, picked])
+  const entry = entries.find((candidate) => candidate.id === entryId) ?? null
   const notify = useCallback((kind: Notice['kind'], text: string) => setNotice({ kind, text }), [])
   useEffect(() => {
     if (!notice || notice.kind === 'error') return
@@ -131,7 +134,8 @@ export function App({ demo = __DEMO_MODE__ }: { demo?: boolean }) {
     setExpanded(defaultExpanded(next))
     setEntryId(next.entries[0]?.id ?? null)
     setEntryOpen(new Set())
-    setSelected(null)
+    setPicked([])
+    setSelected(next.entries[0]?.symbol ?? null)
     setSim((current) => (current?.params.choice === 'loop' ? current : null))
     setSimChoice('loop')
     setView(next.entries.length ? 'flows' : 'architecture')
@@ -197,13 +201,13 @@ export function App({ demo = __DEMO_MODE__ }: { demo?: boolean }) {
 
   /* ─────────────── simulation ─────────────── */
   const runSimulation = useCallback((params: SimParams, language: Locale) => {
-    const chosen = params.choice === 'loop' ? null : project.entries.find((candidate) => candidate.id === params.choice)
+    const chosen = params.choice === 'loop' ? null : entries.find((candidate) => candidate.id === params.choice)
     const result = chosen
       ? simulate(params.request, { kind: 'entry', project, entry: chosen, depth: params.depth }, { locale: language })
       : simulate(params.request, { kind: 'loop' }, { locale: language })
     setSim({ params, result })
     return result
-  }, [project])
+  }, [project, entries])
 
   const startSimulation = (override?: Partial<SimParams>) => {
     const params: SimParams = { request: request.trim() ? request : t('run.example1'), choice: simChoice, depth: simDepth, ...override }
@@ -229,11 +233,20 @@ export function App({ demo = __DEMO_MODE__ }: { demo?: boolean }) {
     if (view === 'flows' && !visible.has(id) && selected) setEntryOpen((current) => new Set(current).add(selected))
     setSelected(id)
   }
+  const pickFunction = (symbolId: string) => {
+    const symbol = project.symbols.get(symbolId)
+    if (!symbol) return
+    const next = functionEntry(symbol)
+    setPicked((current) => (current.some((candidate) => candidate.id === next.id) ? current : [...current, next]))
+    setEntryId(next.id)
+    setEntryOpen(new Set())
+    setSelected(next.symbol)
+  }
   const onExpand = useCallback((id: string) => setEntryOpen((current) => new Set(current).add(id)), [])
   const onToggle = useCallback((id: string) => setExpanded((current) => { const next = new Set(current); if (next.has(id)) next.delete(id); else next.add(id); return next }), [])
 
   const exportText = graph ? toMermaid(graph) : ''
-  const selectView = (next: View) => { setView(next); setSelected(null) }
+  const selectView = (next: View) => { setView(next); setSelected(next === 'flows' ? entry?.symbol ?? null : null) }
   const canvasEmpty = view === 'run' ? <p>{runMode === 'simulated' ? t('run.noSimulation') : t('run.noTrace')}</p> : view === 'flows' ? <p>{project.symbols.size ? t('canvas.empty') : t('side.noMapper')}</p> : <p>{t('canvas.empty')}</p>
   const announce = view === 'run' && events[player.index] ? t('player.step', { n: player.index + 1, total: events.length, name: events[player.index].name }) : ''
 
@@ -247,10 +260,10 @@ export function App({ demo = __DEMO_MODE__ }: { demo?: boolean }) {
       <div className="body">
         <aside className="side" aria-label={t('side.aria')}>
           {view === 'architecture' ? <ArchitectureSide t={t} project={project} onExpandAll={() => setExpanded(new Set(groupIds(project)))} onCollapseAll={() => setExpanded(new Set())} /> : null}
-          {view === 'flows' ? <FlowsSide t={t} project={project} entryId={entryId} onEntry={(id) => { setEntryId(id); setEntryOpen(new Set()); setSelected(null) }} depth={entryDepth} onDepth={setEntryDepth} /> : null}
+          {view === 'flows' ? <FlowsSide t={t} project={project} entries={entries} entryId={entryId} onEntry={(id) => { setEntryId(id); setEntryOpen(new Set()); setSelected(entries.find((candidate) => candidate.id === id)?.symbol ?? null) }} onPickFunction={pickFunction} depth={entryDepth} onDepth={setEntryDepth} /> : null}
           {view === 'run' ? (
             <RunSide
-              t={t} mode={runMode} onMode={setRunMode} request={request} onRequest={setRequest} entries={project.entries} simChoice={simChoice} onSimChoice={setSimChoice}
+              t={t} mode={runMode} onMode={setRunMode} request={request} onRequest={setRequest} entries={entries} simChoice={simChoice} onSimChoice={setSimChoice}
               depth={simDepth} onDepth={setSimDepth} onSimulate={() => startSimulation()} shape={sim?.result.shape}
               events={events} index={player.index} onSeek={(index) => dispatch({ type: 'seek', index })}
               realTitle={real?.title} realSample={Boolean(real?.trace.header.synthetic)} sampleId={real?.sampleId ?? ''} onSample={loadSample} onTraceFile={(file) => void loadTraceFile(file)} canLoadTrace={policy.canLoadLocalTrace}

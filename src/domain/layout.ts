@@ -49,24 +49,45 @@ export function layoutGraph(graph: FlowGraph): Layout {
     const members = children.get(container) ?? []
     if (!members.length) return { width: 0, height: 0 }
     for (const member of members) sizes.set(member.id, member.kind === 'group' && member.collapsed === false && (children.get(member.id)?.length ?? 0) > 0 ? wrap(place(member.id)) : nodeSize(member))
-    const g = new dagre.graphlib.Graph()
-    g.setGraph({ rankdir: graph.direction, nodesep: container ? 24 : 36, ranksep: container ? 56 : 90, marginx: 0, marginy: 0 })
-    g.setDefaultEdgeLabel(() => ({}))
-    for (const member of members) g.setNode(member.id, { ...sizes.get(member.id)! })
-    const seen = new Set<string>()
-    for (const [from, to] of edgesAt.get(container) ?? []) {
-      if (from === to || seen.has(`${from}\0${to}`)) continue
-      seen.add(`${from}\0${to}`)
-      g.setEdge(from, to)
-    }
-    dagre.layout(g)
+    const pairs = [...new Set((edgesAt.get(container) ?? []).filter(([from, to]) => from !== to).map(([from, to]) => `${from}\0${to}`))].map((key) => key.split('\0') as [string, string])
+    const connected = new Set(pairs.flat())
+    const linked = members.filter((member) => connected.has(member.id))
+    // Nodes without any edge would stack into one endless column: pack them in a grid below the connected part instead.
+    const loose = members.filter((member) => !connected.has(member.id))
     const offsetX = container ? GROUP_PADDING : 0
     const offsetY = container ? GROUP_PADDING + GROUP_HEADER : 0
-    for (const member of members) {
-      const at = g.node(member.id)
-      relative.set(member.id, { x: at.x - at.width / 2 + offsetX, y: at.y - at.height / 2 + offsetY, width: at.width, height: at.height })
+    let width = 0
+    let height = 0
+    if (linked.length) {
+      const g = new dagre.graphlib.Graph()
+      g.setGraph({ rankdir: graph.direction, nodesep: container ? 24 : 36, ranksep: container ? 56 : 90, marginx: 0, marginy: 0 })
+      g.setDefaultEdgeLabel(() => ({}))
+      for (const member of linked) g.setNode(member.id, { ...sizes.get(member.id)! })
+      for (const [from, to] of pairs) g.setEdge(from, to)
+      dagre.layout(g)
+      for (const member of linked) {
+        const at = g.node(member.id)
+        relative.set(member.id, { x: at.x - at.width / 2 + offsetX, y: at.y - at.height / 2 + offsetY, width: at.width, height: at.height })
+      }
+      ;({ width = 0, height = 0 } = g.graph())
     }
-    const { width = 0, height = 0 } = g.graph()
+    if (loose.length) {
+      // Aim for a block about as wide as a screen: columns ≈ √(count × cell height ÷ cell width × 1.7).
+      const cellWidth = Math.max(...loose.map((member) => sizes.get(member.id)!.width)) + 24
+      const cellHeight = loose.reduce((sum, member) => sum + sizes.get(member.id)!.height, 0) / loose.length + 24
+      const columns = Math.max(1, Math.min(10, Math.round(Math.sqrt((loose.length * cellHeight * 1.7) / cellWidth))))
+      const rows: FlowNode[][] = []
+      for (let at = 0; at < loose.length; at += columns) rows.push(loose.slice(at, at + columns))
+      const startY = height ? height + 48 : 0
+      let y = startY
+      for (const row of rows) {
+        let x = 0
+        for (const member of row) { const size = sizes.get(member.id)!; relative.set(member.id, { x: x + offsetX, y: y + offsetY, width: size.width, height: size.height }); x += size.width + 24 }
+        width = Math.max(width, x - 24)
+        y += Math.max(...row.map((member) => sizes.get(member.id)!.height)) + 24
+      }
+      height = y - 24
+    }
     return { width, height }
   }
   const wrap = (inner: { width: number; height: number }) => ({ width: Math.max(CARD_WIDTH, inner.width + GROUP_PADDING * 2), height: inner.height + GROUP_PADDING * 2 + GROUP_HEADER })

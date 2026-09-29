@@ -2,17 +2,21 @@
 
 [← English](../../README.md) · **Nederlands**
 
-Local-first visueel programmeren: open een map en bekijk projecten, lagen, flows, bestanden en imports als verbonden stukken in een Three.js Canvas met een VS Code-achtige omgeving.
-
-Het standaardvoorbeeld is een veilige momentopname van [`wesleysimplicio/simplicio-loop`](https://github.com/wesleysimplicio/simplicio-loop). De geplande bootstrap bereidt ook `simplicio-mapper` en de lokale `simplicio-loop`-skill voor.
+Lokale 2D-flowviewer. Plak de link van een GitHub-project om de flows als stroomdiagrammen te zien (ingangspunt → stappen → aanroepen, met wat elke stap doet en de broncode), en speel daarna een echte of gesimuleerde run stap voor stap af, inclusief elke LLM-aanroep.
 
 ```bash
-git clone https://github.com/wesleysimplicio/simplicio-canvas.git
+git clone https://github.com/simpletibr/simplicio-canvas.git
 cd simplicio-canvas && npm install && npm run dev
 ```
 
-MVP: lokale map, talen en imports, verplaatsbare stukken, 3D-navigatie, Explorer, tabs, terminal/editor, Inspector en responsieve layout. Code blijft lokaal.
+Lokaal draaien: `npm run dev` → http://127.0.0.1:5173
 
-![Simplicio Canvas IDE](../../output/playwright/vscode-shell-desktop.png)
+- **Flows** — architectuur en één flow per ingangspunt, met Mermaid-export.
+- **Afspelen** — laad een `simplicio.trace/v1`-bestand of de JSON die `simplicio-loop turbo` afdrukt; afspelen, pauzeren, stap voor stap; elke LLM-aanroep met model, tokens, kosten, latentie en voorbeeld van prompt en antwoord.
+- **Simulatie** — typ een verzoek en zie waar het heen zou gaan en waarom, zonder iets uit te voeren.
 
-[Roadmap](https://github.com/wesleysimplicio/simplicio-canvas/issues) · [MIT](../../LICENSE)
+De code blijft op je machine: bestanden worden in de browser gelezen en nooit geüpload.
+
+![Simplicio Canvas](../images/flows.png)
+
+[Trace-formaat](../trace-format.md) · [Simulatie](../simulation.md) · [MIT](../../LICENSE)

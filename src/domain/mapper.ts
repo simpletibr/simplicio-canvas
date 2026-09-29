@@ -18,7 +18,7 @@ export interface MapperModel {
   files: MapperFile[]
   modules: Array<{ name: string; fileCount: number }>
   producer?: { component?: string; version?: string }
-  coverage?: { status?: string; ambiguous?: number; truncated?: boolean }
+  coverage?: { status?: string; ambiguous?: number; truncated?: boolean; observed?: number; emitted?: number }
   generatedAt?: string
 }
 
@@ -80,7 +80,7 @@ export function parseMapperArtifacts(artifacts: MapperArtifacts): { model: Mappe
     }
     if (isRecord(artifacts.callGraph.coverage)) {
       const coverage = artifacts.callGraph.coverage
-      model.coverage = { status: str(coverage.status), ambiguous: int(coverage.ambiguous_relations), truncated: typeof coverage.truncated === 'boolean' ? coverage.truncated : undefined }
+      model.coverage = { status: str(coverage.status), ambiguous: int(coverage.ambiguous_relations), truncated: typeof coverage.truncated === 'boolean' ? coverage.truncated : undefined, observed: int(coverage.observed_edges), emitted: int(coverage.emitted_edges) }
     }
     if (isRecord(artifacts.callGraph.producer)) model.producer = { component: str(artifacts.callGraph.producer.component), version: str(artifacts.callGraph.producer.version) }
   }
@@ -120,7 +120,7 @@ export function slimMapperArtifacts(artifacts: MapperArtifacts): MapperArtifacts
       return Object.fromEntries(Object.entries(kept).filter(([, value]) => value !== undefined))
     })
     const unresolved = (Array.isArray(graph.unresolved) ? graph.unresolved : []).filter(isRecord).map((entry) => Object.fromEntries(Object.entries({ source_file: entry.source_file, line: entry.line, queried_symbol: entry.queried_symbol, kind: entry.kind }).filter(([, value]) => value !== undefined)))
-    const coverage = isRecord(graph.coverage) ? { status: graph.coverage.status, ambiguous_relations: graph.coverage.ambiguous_relations, truncated: graph.coverage.truncated } : undefined
+    const coverage = isRecord(graph.coverage) ? { status: graph.coverage.status, ambiguous_relations: graph.coverage.ambiguous_relations, truncated: graph.coverage.truncated, observed_edges: graph.coverage.observed_edges, emitted_edges: graph.coverage.emitted_edges } : undefined
     const producer = isRecord(graph.producer) ? { component: graph.producer.component, version: graph.producer.version } : undefined
     out.callGraph = { schema: graph.schema, edges, unresolved, coverage, producer }
   }

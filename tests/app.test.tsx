@@ -48,6 +48,43 @@ describe('static views', () => {
     expect(within(canvas).getByText('simplicio_survey')).toBeTruthy()
   })
 
+  it('selects a node from the keyboard (Enter or Space on a focused node)', () => {
+    render(<App demo={false} />)
+    const canvas = screen.getByRole('main', { name: t('canvas.aria') })
+    const node = within(canvas).getByText('parse_options').closest('.react-flow__node') as HTMLElement
+    expect(node.tabIndex).toBe(0)
+    fireEvent.keyDown(node, { key: 'Enter', code: 'Enter' })
+    expect(within(screen.getByRole('complementary', { name: t('details.aria') })).getByRole('heading', { name: /parse_options/ })).toBeTruthy()
+  })
+
+  it('shows a file and a folder in the architecture view: layer, imports, source and file counts', () => {
+    render(<App demo={false} />)
+    openView(t('view.architecture'))
+    const canvas = screen.getByRole('main', { name: t('canvas.aria') })
+    const details = screen.getByRole('complementary', { name: t('details.aria') })
+    fireEvent.click(within(canvas).getByText('turbo_cli.py'))
+    expect(within(details).getByRole('heading', { name: /turbo_cli\.py/ })).toBeTruthy()
+    expect(within(details).getByText('simplicio_loop/turbo_cli.py')).toBeTruthy()
+    expect(within(details).getAllByText('simplicio_loop/turbo.py').length).toBeGreaterThan(0)
+    fireEvent.click(within(canvas).getByText('simplicio_loop/'))
+    expect(within(details).getByRole('heading', { name: /simplicio_loop\// })).toBeTruthy()
+    expect(within(details).getByText('Python 14')).toBeTruthy()
+  })
+
+  it('lets the user start a flow from any function found by searching the symbols', () => {
+    render(<App demo={false} />)
+    const side = screen.getByRole('complementary', { name: t('side.aria') })
+    fireEvent.change(within(side).getByRole('searchbox', { name: t('side.filter') }), { target: { value: 'build_tasks' } })
+    fireEvent.click(within(side).getByRole('button', { name: /^build_tasks\s/ }))
+    const canvas = screen.getByRole('main', { name: t('canvas.aria') })
+    expect(within(canvas).getByText('mentioned_paths')).toBeTruthy()
+    fireEvent.change(within(side).getByRole('searchbox', { name: t('side.filter') }), { target: { value: '' } })
+    expect(within(side).getByText(t('entry.function'))).toBeTruthy()
+    openView(t('view.run'))
+    const flow = screen.getByLabelText(t('run.flow')) as HTMLSelectElement
+    expect([...flow.options].some((option) => option.textContent?.startsWith('build_tasks ·'))).toBe(true)
+  })
+
   it('draws the architecture with collapsible folders', () => {
     render(<App demo={false} />)
     openView(t('view.architecture'))
@@ -66,8 +103,14 @@ describe('static views', () => {
     const text = (within(dialog).getByRole('textbox') as HTMLTextAreaElement).value
     expect(text.startsWith('flowchart LR')).toBe(true)
     expect(text).toContain('simplicio-loop')
-    fireEvent.click(within(dialog).getByRole('button', { name: t('common.close') }))
-    expect(screen.queryByRole('dialog')).toBeNull()
+    let copied = ''
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: async (value: string) => { copied = value } } })
+    fireEvent.click(within(dialog).getByRole('button', { name: t('mermaid.copy') }))
+    return waitFor(() => expect(within(dialog).getByRole('button', { name: t('mermaid.copied') })).toBeTruthy()).then(() => {
+      expect(copied).toBe(text)
+      fireEvent.click(within(dialog).getByRole('button', { name: t('common.close') }))
+      expect(screen.queryByRole('dialog')).toBeNull()
+    })
   })
 })
 
@@ -98,7 +141,8 @@ describe('simulation', () => {
   it('walks the call graph of a project entry point', () => {
     render(<App demo={false} />)
     openView(t('view.run'))
-    fireEvent.change(screen.getByLabelText(t('run.flow')), { target: { value: 'console_script:simplicio-loop' } })
+    const flow = screen.getByLabelText(t('run.flow')) as HTMLSelectElement
+    fireEvent.change(flow, { target: { value: [...flow.options].find((option) => option.textContent?.startsWith('simplicio-loop ·'))!.value } })
     fireEvent.change(screen.getByLabelText(t('run.request')), { target: { value: 'turbo add a field' } })
     fireEvent.click(screen.getByRole('button', { name: t('run.simulate') }))
     const names = stepList().map((item) => item.textContent ?? '')

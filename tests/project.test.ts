@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { EXAMPLE_ARTIFACTS, EXAMPLE_FILES, EXAMPLE_NAME } from '../src/example'
-import { ambiguousOf, buildProject, callersOf, callsOf, describeSymbol, externalCallsOf } from '../src/domain/project'
+import { functionEntry } from '../src/domain/entrypoints'
+import { ambiguousOf, buildProject, callRoots, callersOf, callsOf, describeSymbol, externalCallsOf, findSymbols } from '../src/domain/project'
 
 const example = buildProject({ name: EXAMPLE_NAME, files: EXAMPLE_FILES, artifacts: EXAMPLE_ARTIFACTS })
 const RUN = 'simplicio_loop/turbo_cli.py::run_turbo_command'
@@ -58,6 +59,29 @@ describe('project model from the bundled example', () => {
     expect(details.callers).toHaveLength(2)
     expect(describeSymbol(example, 'simplicio_loop/turbo_provider.py::require_key')?.raises).toEqual(['RuntimeError'])
     expect(describeSymbol(example, 'nope')).toBeUndefined()
+  })
+})
+
+describe('picking any function as a flow start', () => {
+  it('suggests the call graph roots: functions that call others but are called by nobody', () => {
+    const roots = callRoots(example, 10).map((symbol) => symbol.label)
+    expect(roots).toEqual(expect.arrayContaining(['main', 'simplicio_turbo', 'simplicio_survey']))
+    expect(roots).not.toContain('emit')
+    expect(roots).not.toContain('run_turbo_command')
+    expect(roots.some((label) => label.startsWith('test_'))).toBe(false)
+  })
+
+  it('finds functions by name or file, exact names first, and ignores one-letter searches', () => {
+    expect(findSymbols(example, 'emit').map((symbol) => symbol.label)[0]).toBe('emit')
+    expect(findSymbols(example, 'turbo_cli.py').every((symbol) => symbol.file.endsWith('turbo_cli.py'))).toBe(true)
+    expect(findSymbols(example, 'e')).toEqual([])
+    expect(findSymbols(example, 'run', 3)).toHaveLength(3)
+  })
+
+  it('turns a symbol into a function entry with a unique id', () => {
+    const entry = functionEntry(example.symbols.get('simplicio_loop/report.py::emit')!)
+    expect(entry).toMatchObject({ kind: 'function', name: 'emit', symbol: 'simplicio_loop/report.py::emit', file: 'simplicio_loop/report.py' })
+    expect(entry.id).toContain('simplicio_loop/report.py::emit')
   })
 })
 

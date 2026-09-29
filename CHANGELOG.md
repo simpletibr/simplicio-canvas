@@ -1,5 +1,24 @@
 # Changelog
 
+## Unreleased — 2D flow viewer
+
+- Rebuild Canvas as a simple 2D, LangFlow-style flow viewer on React Flow (`@xyflow/react`) with dagre layout: pan, zoom, fit,
+  minimap, collapsible folder groups and a side panel with docstring, signature, callers, callees and source.
+- Static views from a GitHub link (local bridge: shallow clone + `simplicio-mapper`): architecture and one flow per entry point
+  (console scripts, click/typer/argparse commands, MCP tools, `main`, any function), depth-limited and expandable. Export
+  Mermaid for any view.
+- Replay: `simplicio.trace/v1` (JSONL) format, parser and player; importer for the JSON printed by `simplicio-loop turbo`
+  (provider mode and host mode); LLM call details (model, tokens, cost, latency, prompt/response preview). Load a file or drop it on the page.
+- Simulation: type a request and watch where it would go and why, with a plain-language explanation for every step, for the
+  `simplicio-loop` flow (single, fan-out, same file, queue, provider mode) or for the call graph of any project entry point.
+  Nothing runs; unknowns are marked.
+- Local-first hardening: the bridge no longer forwards Mapper's raw output or reads symlinks; production builds carry a CSP;
+  a test keeps the bridge the only network call.
+- Interface in Portuguese and English (was 15 locales for the old UI).
+- Removed: the Three.js workspace, the IDE-shell UI, `three`/`@types/three`, and the domain modules only that UI used
+  (with their tests).
+- Docs: `docs/trace-format.md`, `docs/simulation.md`, new README and product spec.
+
 ## 2.13.0 — 2026-07-11
 
 - Promote compatibility and distribution to verified readiness after the five-stack evidence and signed VSIX receipt.

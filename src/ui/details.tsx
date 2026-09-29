@@ -49,6 +49,7 @@ function Overview({ t, project }: Pick<StaticProps, 't' | 'project'>) {
           {project.mapper?.producer?.version ? <Row label="Mapper">{project.mapper.producer.version}{project.mapper.coverage?.status ? ` · ${t('details.coverage', { status: project.mapper.coverage.status })}` : ''}</Row> : null}
         </dl>
         <Chips items={languages.map(([name, count]) => `${name} ${count}`)} />
+        {project.mapper?.coverage?.truncated ? <p className="warn">{t('side.truncated', { emitted: project.mapper.coverage.emitted ?? '?', observed: project.mapper.coverage.observed ?? '?' })}</p> : null}
       </Section>
     </>
   )
@@ -116,7 +117,7 @@ function SymbolDetails({ t, project, id, entry, visible, onSelect, onSimulate }:
       {details.raises.length ? <Section title={t('details.raises')}><Chips items={details.raises} /></Section> : null}
       <Section title={t('details.calls')}>
         {details.callees.length ? <ul className="plain">{details.callees.map((call) => link(call.to, project.symbols.get(call.to)?.label ?? call.to, call.line, call.guards.length > 0 || Boolean(call.after), true))}</ul> : <p className="muted">{t('details.none')}</p>}
-        {details.ambiguous.length ? <p className="muted">{t('details.ambiguous')}: {details.ambiguous.map((item) => `${item.candidates[0]?.split('::')[1] ?? '?'} (${t('details.line', { line: item.line })})`).join(', ')}</p> : null}
+        {details.ambiguous.length ? <p className="muted">{t('details.ambiguous')}: {details.ambiguous.map((item) => `${item.candidates[0]?.split('::')[1] ?? '?'} (${t('details.line', { line: item.line })}${item.candidates.length > 1 ? `, ${t('details.candidates', { count: item.candidates.length })}` : ''})`).join('; ')}</p> : null}
       </Section>
       {details.external.length ? <Section title={t('details.external')}><Chips items={details.external} /></Section> : null}
       <Section title={t('details.calledBy')}>

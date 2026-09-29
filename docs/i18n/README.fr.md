@@ -2,17 +2,21 @@
 
 [← English](../../README.md) · **Français**
 
-Programmation visuelle local-first : ouvrez un dossier et explorez projets, couches, flux, fichiers et imports comme des pièces connectées dans un Canvas Three.js inspiré de VS Code.
-
-L’exemple par défaut est un instantané sécurisé de [`wesleysimplicio/simplicio-loop`](https://github.com/wesleysimplicio/simplicio-loop). Le bootstrap prévu prépare aussi `simplicio-mapper` et la compétence locale `simplicio-loop`.
+Visionneuse 2D de flux, locale et privée. Collez le lien d’un projet GitHub pour voir ses flux sous forme de diagrammes (point d’entrée → étapes → appels, avec ce que fait chaque étape et son code), puis rejouez pas à pas une exécution réelle ou simulée, y compris chaque appel à un LLM.
 
 ```bash
-git clone https://github.com/wesleysimplicio/simplicio-canvas.git
+git clone https://github.com/simpletibr/simplicio-canvas.git
 cd simplicio-canvas && npm install && npm run dev
 ```
 
-MVP : dossier local, langages et imports, pièces mobiles, navigation 3D, Explorer, onglets, terminal/éditeur, Inspector et interface responsive. Le code reste local.
+Lancer en local: `npm run dev` → http://127.0.0.1:5173
 
-![Simplicio Canvas IDE](../../output/playwright/vscode-shell-desktop.png)
+- **Flux** — architecture et un flux par point d’entrée, avec export Mermaid.
+- **Rejeu** — chargez un fichier `simplicio.trace/v1` ou le JSON affiché par `simplicio-loop turbo` ; lecture, pause, pas à pas ; chaque appel LLM avec modèle, jetons, coût, latence et aperçu du prompt et de la réponse.
+- **Simulation** — saisissez une demande et voyez où elle irait et pourquoi, sans rien exécuter.
 
-[Roadmap](https://github.com/wesleysimplicio/simplicio-canvas/issues) · [MIT](../../LICENSE)
+Le code reste chez vous : les fichiers sont lus dans le navigateur et jamais envoyés.
+
+![Simplicio Canvas](../images/flows.png)
+
+[Format de trace](../trace-format.md) · [Simulation](../simulation.md) · [MIT](../../LICENSE)

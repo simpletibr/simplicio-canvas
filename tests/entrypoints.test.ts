@@ -30,6 +30,21 @@ describe('entry point detection', () => {
     expect(entries.map((entry) => [entry.kind, entry.name, entry.symbol])).toEqual([['cli_command', 'cli', 'cli.py::cli'], ['cli_command', 'serve-it', 'cli.py::serve'], ['cli_command', 'build-all', 'cli.py::build_all']])
   })
 
+  it('does not take a dict key or option value inside the decorator arguments for the command name', () => {
+    const content = ['@click.command(context_settings={"help_option_names": ["-h", "--help"]})', 'def main(files):', '    pass', '', '@click.group(name="tools", context_settings={"a": "b"})', 'def group():', '    pass'].join('\n')
+    const symbols = [sym('black.py', 'main', 2), sym('black.py', 'group', 6)]
+    const { entries } = detectEntryPoints({ files: [file('black.py', content)], symbols })
+    expect(entries.map((entry) => [entry.kind, entry.name])).toEqual([['cli_command', 'main'], ['cli_command', 'tools']])
+  })
+
+  it('gives every entry a unique id even when several files define a main function', () => {
+    const symbols = [sym('a/run.py', 'main', 1), sym('b/run.py', 'main', 1)]
+    const files = [file('a/run.py', 'def main():\n    pass\nif __name__ == "__main__":\n    main()\n'), file('b/run.py', 'def main():\n    pass\nif __name__ == "__main__":\n    main()\n')]
+    const { entries } = detectEntryPoints({ files, symbols })
+    expect(entries.map((entry) => entry.name)).toEqual(['main', 'main'])
+    expect(new Set(entries.map((entry) => entry.id)).size).toBe(2)
+  })
+
   it('finds argparse sub-commands that set a handler with set_defaults', () => {
     const content = ['def build(sub):', '    run = sub.add_parser("run", help="x")', '    run.set_defaults(func=cmd_run)', '    sub.add_parser("noop")', '', 'def cmd_run(args):', '    pass'].join('\n')
     const symbols = [sym('cli.py', 'build', 1), sym('cli.py', 'cmd_run', 6)]

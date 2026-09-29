@@ -1,144 +1,100 @@
-# 🧩 Simplicio Canvas — visual software assembly
+# Simplicio Canvas — see how software flows
 
 <p align="center">
-  <strong>English</strong> · <a href="docs/i18n/README.pt-BR.md">Português</a> · <a href="docs/i18n/README.es.md">Español</a> · <a href="docs/i18n/README.fr.md">Français</a> · <a href="docs/i18n/README.de.md">Deutsch</a> · <a href="docs/i18n/README.it.md">Italiano</a> · <a href="docs/i18n/README.nl.md">Nederlands</a> · <a href="docs/i18n/README.pl.md">Polski</a> · <a href="docs/i18n/README.ru.md">Русский</a> · <a href="docs/i18n/README.uk.md">Українська</a> · <a href="docs/i18n/README.tr.md">Türkçe</a> · <a href="docs/i18n/README.ar.md">العربية</a> · <a href="docs/i18n/README.hi.md">हिन्दी</a> · <a href="docs/i18n/README.ja.md">日本語</a> · <a href="docs/i18n/README.zh-CN.md">简体中文</a>
-</p>
-
-<p align="center"><a href="https://simpleti.com.br/simplicio_canvas/"><strong>▶ Open the live Canvas 2.9</strong></a></p>
-
-The hosted URL is a secure, read-only visualization of the bundled `simplicio-loop` example. Clone this repository and run the default build locally when you need folder/GitHub import or editing.
-
-The orchestration skill used for the example is available as the Python package [`simplicio-loop==3.31.1`](https://pypi.org/project/simplicio-loop/3.31.1/):
-
-```bash
-python3 -m pip install simplicio-loop==3.31.1
-```
-
-<p align="center">
-  <img src="assets/simplicio-canvas-overview.png" alt="Simplicio Canvas renders a software project as connected puzzle pieces in a Three.js workspace" width="920" />
+  <strong>English</strong> · <a href="docs/i18n/README.pt-BR.md">Português</a> · <a href="docs/i18n/README.es.md">Español</a> · <a href="docs/i18n/README.fr.md">Français</a> · <a href="docs/i18n/README.de.md">Deutsch</a> · <a href="docs/i18n/README.it.md">Italiano</a> · <a href="docs/i18n/README.nl.md">Nederlands</a> · <a href="docs/i18n/README.pl.md">Polski</a> · <a href="docs/i18n/README.ru.md">Русский</a> · <a href="docs/i18n/README.uk.md">Українська</a> · <a href="docs/i18n/README.tr.md">Türkçe</a> · <a href="docs/i18n/README.ar.md">العربية</a> · <a href="docs/i18n/README.hi.md">हिन्दी</a> · <a href="docs/i18n/README.ja.md">日本語</a> · <a href="docs/i18n/README.ko.md">한국어</a> · <a href="docs/i18n/README.zh-CN.md">简体中文</a>
 </p>
 
 <p align="center">
-  <a href="https://github.com/wesleysimplicio/simplicio-canvas/actions"><img src="https://img.shields.io/github/actions/workflow/status/wesleysimplicio/simplicio-canvas/ci.yml?branch=main&label=checks" alt="Checks"></a>
-  <a href="https://github.com/wesleysimplicio/simplicio-canvas/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT license"></a>
+  <img src="docs/images/flows.png" alt="Simplicio Canvas draws the flow of a console script as a 2D flowchart and explains the selected function" width="920" />
+</p>
+
+<p align="center">
+  <a href="https://github.com/simpletibr/simplicio-canvas/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT license"></a>
   <img src="https://img.shields.io/badge/local--first-private-67E8A5" alt="Local first and private">
-  <img src="https://img.shields.io/badge/Three.js-3D%20canvas-FF5D73" alt="Three.js 3D canvas">
+  <img src="https://img.shields.io/badge/React%20Flow-2D%20canvas-FF5D73" alt="React Flow 2D canvas">
+</p>
+
+**Paste a GitHub project link and see its flows as 2D flowcharts. Replay what really happened when someone asked a tool for something — every step, every LLM call — or simulate it without running anything.** Think *dynamic Mermaid*.
+
+## What you get
+
+| | |
+|---|---|
+| **Flows** | The architecture (folders, imports) and one flow per entry point — console scripts, CLI commands, MCP tools, `main` functions, or any function you pick — from the `simplicio-mapper` call graph and symbol index: entry → steps → calls, with what each step does (docstring), signature, callers, callees and source. Depth-limited, expandable node by node. |
+| **Replay** | A step-by-step player (play, pause, step, speed, timeline) for a real run: the JSON that `simplicio-loop turbo` prints, or any [`simplicio.trace/v1`](docs/trace-format.md) JSONL file from your own script, MCP server or LLM app. Every LLM call shows model, provider, tokens, cost, latency and prompt/response preview. |
+| **Simulation** | Type a request ("add a phone field to signup.html", "resolve all issues") and watch where it would go and why, with a plain-language explanation for every step — no model call, no key. Built in for the `simplicio-loop` flow; for any project it walks the call graph from the entry point you choose. See [docs/simulation.md](docs/simulation.md). |
+| **Mermaid export** | The current view as flowchart text for docs, issues and pull requests. |
+
+<p align="center">
+  <img src="docs/images/simulacao-pt.gif" alt="A simulated request walked step by step through the simplicio-loop flow, with the explanation of each step" width="820" />
 </p>
 
 <p align="center">
-  <strong>Open a folder. See its languages, files, imports, and architecture as a workspace you can assemble.</strong>
+  <img src="docs/images/replay.png" alt="Replay of a run: an LLM call with model, tokens, cost, latency, prompt and response" width="49%" />
+  <img src="docs/images/architecture.png" alt="Architecture view: folders as collapsible groups with import edges" width="49%" />
 </p>
 
----
-
-## ⚡ TL;DR
-
-Simplicio Canvas is an early local-first prototype for visual programming. Its default workspace is the public [`wesleysimplicio/simplicio-loop`](https://github.com/wesleysimplicio/simplicio-loop) project, represented by a safe bundled snapshot. It turns a project folder into colored puzzle pieces on a Three.js canvas inside a VS Code-like workspace:
-
-- **Color** represents the software layer: presentation, application, domain, infrastructure, tests, docs, and configuration.
-- **Pieces** represent responsibilities such as screen, service, entity, repository, adapter, and test.
-- **Curves** represent real internal imports detected from source files.
-- **Click** a file to inspect language, imports, reverse imports, and its source in a read-only terminal.
-- **Drag** a piece in the local build to rearrange the architecture view without changing the source tree. The hosted demo is intentionally read-only.
-
-The hosted demo reads only its bundled example. In the local build, selected folders are analyzed in browser memory; GitHub imports use the guarded local bridge or bounded public API fallback. Source contents are not uploaded to a Simplicio service.
-
-## 🚀 Run locally
+## Run it locally
 
 ```bash
-git clone https://github.com/wesleysimplicio/simplicio-canvas.git
+git clone https://github.com/simpletibr/simplicio-canvas.git
 cd simplicio-canvas
 npm install
-npm run dev
+npm run dev          # http://127.0.0.1:5173
 ```
 
-Open the local URL and choose either (the public URL intentionally exposes neither control):
+- **Paste a GitHub link** (`github.com/owner/repo`) in the top bar and press **Analyze**. The local Vite bridge makes a shallow clone under `.simplicio/workspaces`, runs `simplicio-mapper scan` and sends the source files and Mapper's artifacts to the page. It needs `git` and `simplicio-mapper` on your `PATH` (`python3 -m pip install simplicio-loop` provides it; `npm run bootstrap` prints a readiness receipt). Without Mapper you still get the architecture view.
+- **Open folder** reads a directory in the browser (a `.simplicio-loop/` folder written by `simplicio-mapper scan` is picked up too).
+- **Load a trace**: *Run → Real run → Load trace*, or drop the file on the page. It accepts `simplicio.trace/v1` JSONL and the JSON printed by `simplicio-loop turbo` (provider mode and host mode).
+- **Simulate**: *Run → Simulated*, type a request, press **Simulate**.
 
-- **Open folder** — authorize a folder already on the machine.
-- **GitHub** — enter a public `owner/repository`; the guarded local Vite bridge performs a shallow clone under `.simplicio/workspaces`, attempts `simplicio-mapper`, and the browser has a public-API fallback when the local bridge is unavailable.
+The first screen opens a bundled, representative snapshot of the `simplicio-loop turbo` pipeline with real Mapper artifacts, and three sample replays.
 
-![GitHub clone and Mapper import dialog](assets/gallery/gallery-desktop.png)
+## The trace format and other tools
 
-The first screen already opens the official `wesleysimplicio/simplicio-loop` example. Run `npm run bootstrap` to emit a local JSON readiness receipt for `simplicio-mapper`, the installed `simplicio-loop` CLI and its project skill. The command is dry-run by default; `node scripts/bootstrap.mjs --repair` is the explicit opt-in repair path.
+`simplicio.trace/v1` is one JSON event per line — `{"id","parent","kind","name","start","end","status","attrs"}` with kinds `step`, `llm_call`, `tool`, `command`, `file_edit` and `verify`. [docs/trace-format.md](docs/trace-format.md) is the contract, with a ~25-line Python emitter, a recipe to capture LLM calls by wrapping the HTTP client, the mapping from `simplicio-loop turbo`, and the design of the next layer (an OpenAI-compatible proxy that records calls for any app).
 
-## 🖥️ Real MVP proof
+> The bundled turbo replays are **samples built from the documented schema**, not captures: no `OPENROUTER_API_KEY` was available to run `simplicio-loop turbo` for real, and host mode (3.45.1) is not released yet. The doc says exactly which parts are real.
 
-### VS Code-like workspace
+## Private by design
 
-![Desktop IDE shell with Activity Bar, Explorer, Three.js Canvas, terminal and inspector](assets/gallery/gallery-desktop.png)
-_Measured in a local Playwright session at 1440×641 CSS pixels._
+Everything runs in your browser. Files, traces and Mapper artifacts are never uploaded; the only network call the app makes is to the local import bridge, a test enforces that, and production builds ship a Content-Security-Policy that allows only their own origin. `npm run build:demo` builds the read-only demo: no import, only the bundled example, sample replays and files you pick locally.
 
-### Native responsive behavior
+## Why these libraries
 
-| Phone portrait | Phone landscape |
+| Choice | Why |
 |---|---|
-| ![Phone portrait](assets/gallery/gallery-mobile.png) | ![Phone landscape](assets/gallery/gallery-top.png) |
+| **[@xyflow/react](https://reactflow.dev)** (React Flow) | The node-graph library LangFlow itself uses: pan, zoom, minimap, controls, custom nodes, accessibility, actively maintained. React comes with it. |
+| **[@dagrejs/dagre](https://github.com/dagrejs/dagre)** | Small (its ESM build is under 50 kB), synchronous, deterministic hierarchical layout: easy to test, no worker. Folder groups are laid out bottom-up by our own small wrapper, which keeps "collapsed group = one node" a plain model question. ELK's bundle is 1.6 MB (470 kB gzipped), more than twice this whole page, for nested layout we do not need yet; Cytoscape.js would replace React Flow's node-as-a-React-component model that the cards and the player build on. |
+| **[smol-toml](https://github.com/squirrelchat/smol-toml)** | Reads `[project.scripts]` correctly instead of a regex over TOML. |
+| **Vite, Vitest, jsdom, Testing Library** | Already the project's toolchain (Vite, Vitest); jsdom and Testing Library render the real app in tests. |
 
-| Tablet | Desktop |
-|---|---|
-| ![Tablet](assets/gallery/gallery-inspector.png) | ![Desktop](assets/gallery/gallery-desktop.png) |
+## What was removed
 
-The gallery above is captured evidence of the current local build; future Mapper
-FLOW and runtime-trace views remain roadmap items until their artifacts are
-available.
+The Three.js workspace, the VS-Code-like shell around it (activity bar, explorer, terminal, run/debug, source-control panel, command palette, onboarding, 15-locale string table) and the domain modules that only that UI used, with their tests. `three` is no longer a dependency. The old direction is in git history (`d680542`).
 
-<details>
-<summary>More captured evidence</summary>
-
-![Mobile IDE shell](assets/gallery/gallery-mobile.png)
-![Top-down project telemetry](assets/gallery/gallery-top.png)
-![Source inspector](assets/gallery/gallery-inspector.png)
-
-</details>
-
-## 🧭 What the MVP analyzes
-
-| Area | Current behavior |
-|---|---|
-| Languages | TypeScript, JavaScript, Python, Rust, Go, C#, Java, Kotlin, frontend/config formats and documentation |
-| Relations | TypeScript/JavaScript and Python imports, with internal path resolution and external package detection |
-| Privacy | Local browser memory only; ignores `.git`, `node_modules`, environments, build artifacts, binaries, and files larger than 1 MB |
-| Interaction | Orbit, zoom, drag pieces, inspect source and dependencies |
-| Rendering | Three.js puzzle pieces, labels, layers and dependency curves |
-
-This is deliberately a static-analysis MVP. It does **not** write source files, run code, or claim complete call-graph accuracy.
-
-## 🗺️ Where it is going
-
-The product direction is semantic zoom rather than a flat graph:
-
-```text
-ecosystem → project → layer / flow → file → class / method
-```
-
-The next capability is to enrich this view with stable symbols, call graphs, end-to-end flows, safe visual refactors, diff previews, validation, and undo.
-
-The canonical roadmap lives in [GitHub milestones](https://github.com/wesleysimplicio/simplicio-canvas/milestones) and [GitHub issues](https://github.com/wesleysimplicio/simplicio-canvas/issues). Local planning files are reference exports only.
-
-## 🧠 Enriching with simplicio-mapper
-
-For a richer model of a real repository, generate mapper artifacts locally:
+## Develop
 
 ```bash
-simplicio-mapper scan /path/to/project --sync --await --json
-simplicio-mapper inspect /path/to/project --json
+npm test                  # unit, UI (jsdom), integration, system and benchmark tests
+npm run test:coverage     # v8 coverage
+npm run build             # tsc + vite build
+npm run build:demo        # read-only demo build (dist-demo)
+npm run fixtures          # regenerate derived fixtures (needs simplicio-mapper for the Mapper artifacts)
+npm run benchmark:render  # performance budgets
 ```
 
-Then use **Import map** in the UI to load a JSON artifact. The current importer reads artifact paths; consuming the complete mapper symbol, call-graph, and flow contracts is the next integration milestone.
+Layout: `src/domain` (pure logic, no UI imports) · `src/ui` (React) · `src/simulation` (the editable explanation texts) · `server` (the local import bridge and the CSP) · `fixtures` · `docs`.
 
-## 🧪 Verification
+## Known limits and next layers
 
-```bash
-npm test
-npm run build
-```
+- **Mapper cuts its call graph at 1,000 edges** and resolves calls lexically; large projects show partial flows (the UI says so). A next layer can ask Mapper per entry point (`simplicio-mapper ask … callees`) and show its `flows` effects (`fs-write`, `network`, `subprocess`).
+- **Live mode**: tail a growing trace file while a run is in progress.
+- **`simplicio-loop --trace`**: emit `simplicio.trace/v1` natively, with real timestamps, per-call cost and previews (turbo-run/v1 carries none of them).
+- **The proxy** for arbitrary LLM apps (documented in [docs/trace-format.md](docs/trace-format.md), not built).
+- HTTP routes as entry points, syntax highlighting in the source excerpt, a bundle split for the 670 kB main chunk, more interface languages than pt-BR and English.
+- Editing contracts from the earlier direction (`operations`, `change-plan`, `generators`, `apply-gate`, ...) are still in `src/domain` but nothing in the viewer uses them.
 
-The domain analyzer and visual grammar are covered by Vitest. Browser proof is captured with Playwright.
-
-## 📜 License
+## License
 
 [MIT](LICENSE)
-
-## ⭐ Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=wesleysimplicio/simplicio-canvas&type=Date)](https://www.star-history.com/#wesleysimplicio/simplicio-canvas&Date)
