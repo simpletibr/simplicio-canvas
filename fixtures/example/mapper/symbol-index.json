@@ -1,0 +1,333 @@
+{
+ "schema": "simplicio.symbol-index/v1",
+ "symbols": [
+  {
+   "name": "main",
+   "qualified_name": "hooks/loop_stop.py::main",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "hooks/loop_stop.py",
+   "line": 6
+  },
+  {
+   "name": "promise_is_true",
+   "qualified_name": "hooks/loop_stop.py::promise_is_true",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "hooks/loop_stop.py",
+   "line": 12
+  },
+  {
+   "name": "main",
+   "qualified_name": "simplicio_loop/cli.py::main",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/cli.py",
+   "line": 9
+  },
+  {
+   "name": "print_usage",
+   "qualified_name": "simplicio_loop/cli.py::print_usage",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/cli.py",
+   "line": 20
+  },
+  {
+   "name": "apply_operations",
+   "qualified_name": "simplicio_loop/dev_cli.py::apply_operations",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/dev_cli.py",
+   "line": 4
+  },
+  {
+   "name": "compile_operation",
+   "qualified_name": "simplicio_loop/dev_cli.py::compile_operation",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/dev_cli.py",
+   "line": 14
+  },
+  {
+   "name": "check_unique",
+   "qualified_name": "simplicio_loop/dev_cli.py::check_unique",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/dev_cli.py",
+   "line": 29
+  },
+  {
+   "name": "request_plan",
+   "qualified_name": "simplicio_loop/host_mode.py::request_plan",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/host_mode.py",
+   "line": 5
+  },
+  {
+   "name": "survey",
+   "qualified_name": "simplicio_loop/mapper_client.py::survey",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/mapper_client.py",
+   "line": 6
+  },
+  {
+   "name": "load_map",
+   "qualified_name": "simplicio_loop/mapper_client.py::load_map",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/mapper_client.py",
+   "line": 14
+  },
+  {
+   "name": "map_slice",
+   "qualified_name": "simplicio_loop/mapper_client.py::map_slice",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/mapper_client.py",
+   "line": 20
+  },
+  {
+   "name": "simplicio_turbo",
+   "qualified_name": "simplicio_loop/mcp_server.py::simplicio_turbo",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/mcp_server.py",
+   "line": 10
+  },
+  {
+   "name": "simplicio_survey",
+   "qualified_name": "simplicio_loop/mcp_server.py::simplicio_survey",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/mcp_server.py",
+   "line": 16
+  },
+  {
+   "name": "serve",
+   "qualified_name": "simplicio_loop/mcp_server.py::serve",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/mcp_server.py",
+   "line": 21
+  },
+  {
+   "name": "orient",
+   "qualified_name": "simplicio_loop/orchestrator.py::orient",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/orchestrator.py",
+   "line": 5
+  },
+  {
+   "name": "read_plan",
+   "qualified_name": "simplicio_loop/plan_store.py::read_plan",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/plan_store.py",
+   "line": 5
+  },
+  {
+   "name": "build_plan_prompt",
+   "qualified_name": "simplicio_loop/prompts.py::build_plan_prompt",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/prompts.py",
+   "line": 7
+  },
+  {
+   "name": "render_tasks",
+   "qualified_name": "simplicio_loop/prompts.py::render_tasks",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/prompts.py",
+   "line": 14
+  },
+  {
+   "name": "read_files",
+   "qualified_name": "simplicio_loop/prompts.py::read_files",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/prompts.py",
+   "line": 19
+  },
+  {
+   "name": "emit",
+   "qualified_name": "simplicio_loop/report.py::emit",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/report.py",
+   "line": 5
+  },
+  {
+   "name": "apply_plan",
+   "qualified_name": "simplicio_loop/turbo.py::apply_plan",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/turbo.py",
+   "line": 5
+  },
+  {
+   "name": "run_with_provider",
+   "qualified_name": "simplicio_loop/turbo.py::run_with_provider",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/turbo.py",
+   "line": 11
+  },
+  {
+   "name": "split_lanes",
+   "qualified_name": "simplicio_loop/turbo.py::split_lanes",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/turbo.py",
+   "line": 23
+  },
+  {
+   "name": "warm_up",
+   "qualified_name": "simplicio_loop/turbo.py::warm_up",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/turbo.py",
+   "line": 28
+  },
+  {
+   "name": "repair_plan",
+   "qualified_name": "simplicio_loop/turbo.py::repair_plan",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/turbo.py",
+   "line": 34
+  },
+  {
+   "name": "run_turbo_command",
+   "qualified_name": "simplicio_loop/turbo_cli.py::run_turbo_command",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/turbo_cli.py",
+   "line": 9
+  },
+  {
+   "name": "parse_options",
+   "qualified_name": "simplicio_loop/turbo_cli.py::parse_options",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/turbo_cli.py",
+   "line": 28
+  },
+  {
+   "name": "build_tasks",
+   "qualified_name": "simplicio_loop/turbo_cli.py::build_tasks",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/turbo_cli.py",
+   "line": 48
+  },
+  {
+   "name": "split_request",
+   "qualified_name": "simplicio_loop/turbo_cli.py::split_request",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/turbo_cli.py",
+   "line": 57
+  },
+  {
+   "name": "mentioned_paths",
+   "qualified_name": "simplicio_loop/turbo_cli.py::mentioned_paths",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/turbo_cli.py",
+   "line": 62
+  },
+  {
+   "name": "require_key",
+   "qualified_name": "simplicio_loop/turbo_provider.py::require_key",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/turbo_provider.py",
+   "line": 7
+  },
+  {
+   "name": "complete",
+   "qualified_name": "simplicio_loop/turbo_provider.py::complete",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/turbo_provider.py",
+   "line": 13
+  },
+  {
+   "name": "complete_hedged",
+   "qualified_name": "simplicio_loop/turbo_provider.py::complete_hedged",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/turbo_provider.py",
+   "line": 19
+  },
+  {
+   "name": "model_name",
+   "qualified_name": "simplicio_loop/turbo_provider.py::model_name",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/turbo_provider.py",
+   "line": 24
+  },
+  {
+   "name": "session_id_for",
+   "qualified_name": "simplicio_loop/turbo_provider.py::session_id_for",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/turbo_provider.py",
+   "line": 29
+  },
+  {
+   "name": "post",
+   "qualified_name": "simplicio_loop/turbo_provider.py::post",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/turbo_provider.py",
+   "line": 34
+  },
+  {
+   "name": "run_verify",
+   "qualified_name": "simplicio_loop/verify.py::run_verify",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/verify.py",
+   "line": 5
+  },
+  {
+   "name": "tail",
+   "qualified_name": "simplicio_loop/verify.py::tail",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "simplicio_loop/verify.py",
+   "line": 12
+  },
+  {
+   "name": "test_check_unique_rejects_missing_and_repeated_text",
+   "qualified_name": "tests/test_dev_cli.py::test_check_unique_rejects_missing_and_repeated_text",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "tests/test_dev_cli.py",
+   "line": 4
+  },
+  {
+   "name": "test_mentioned_paths_finds_files",
+   "qualified_name": "tests/test_turbo_cli.py::test_mentioned_paths_finds_files",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "tests/test_turbo_cli.py",
+   "line": 4
+  },
+  {
+   "name": "test_build_tasks_numbers_tasks",
+   "qualified_name": "tests/test_turbo_cli.py::test_build_tasks_numbers_tasks",
+   "kind": "function",
+   "language": "python",
+   "defined_in": "tests/test_turbo_cli.py",
+   "line": 8
+  }
+ ]
+}

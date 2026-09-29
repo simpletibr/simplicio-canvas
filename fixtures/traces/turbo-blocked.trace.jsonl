@@ -1,0 +1,3 @@
+{"schema":"simplicio.trace/v1","title":"simplicio-loop turbo · provider mode","source":"simplicio.turbo-run/v1 (converted)"}
+{"id":"run","parent":null,"kind":"step","name":"simplicio-loop turbo","start":0,"end":0,"status":"error","attrs":{"mode":"provider","model":"deepseek/deepseek-v4.1-flash","reasoning":"off","session_pinned":true,"repo":"tiny"}}
+{"id":"blocked","parent":"run","kind":"step","name":"Blocked before any work","start":0,"status":"error","attrs":{"reason_code":"turbo_provider_key_missing","detail":"set OPENROUTER_API_KEY (OpenRouter) so simplicio-loop turbo can call deepseek/deepseek-v4.1-flash","fix":"export OPENROUTER_API_KEY=<your OpenRouter key>"}}

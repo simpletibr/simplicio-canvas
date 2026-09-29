@@ -2,17 +2,21 @@
 
 [← English](../../README.md) · **हिन्दी**
 
-Local-first विज़ुअल प्रोग्रामिंग: कोई फ़ोल्डर खोलें और प्रोजेक्ट, लेयर, फ्लो, फ़ाइल तथा imports को VS Code जैसे Three.js Canvas पर जुड़े ब्लॉक के रूप में देखें।
-
-डिफ़ॉल्ट उदाहरण [`wesleysimplicio/simplicio-loop`](https://github.com/wesleysimplicio/simplicio-loop) का सुरक्षित स्नैपशॉट है। नियोजित bootstrap `simplicio-mapper` और स्थानीय `simplicio-loop` skill भी तैयार करता है।
+लोकल-फ़र्स्ट 2D फ़्लो व्यूअर। किसी GitHub प्रोजेक्ट का लिंक चिपकाएँ और उसके फ़्लो फ़्लोचार्ट के रूप में देखें (एंट्री पॉइंट → चरण → कॉल, हर चरण क्या करता है और उसका कोड), फिर किसी असली या सिम्युलेटेड रन को चरण-दर-चरण दोबारा चलाएँ, हर LLM कॉल सहित।
 
 ```bash
-git clone https://github.com/wesleysimplicio/simplicio-canvas.git
+git clone https://github.com/simpletibr/simplicio-canvas.git
 cd simplicio-canvas && npm install && npm run dev
 ```
 
-MVP: स्थानीय फ़ोल्डर, भाषाएँ और imports, चलने वाले ब्लॉक, 3D navigation, Explorer, tabs, terminal/editor, Inspector और responsive layout। कोड स्थानीय रहता है।
+लोकल चलाएँ: `npm run dev` → http://127.0.0.1:5173
 
-![Simplicio Canvas IDE](../../output/playwright/vscode-shell-desktop.png)
+- **फ़्लो** — आर्किटेक्चर और हर एंट्री पॉइंट का एक फ़्लो, Mermaid एक्सपोर्ट के साथ।
+- **रीप्ले** — `simplicio.trace/v1` फ़ाइल या `simplicio-loop turbo` का JSON लोड करें; चलाएँ, रोकें, चरण-दर-चरण बढ़ें; हर LLM कॉल का मॉडल, टोकन, लागत, विलंब और प्रॉम्प्ट/जवाब का पूर्वावलोकन देखें।
+- **सिम्युलेशन** — एक अनुरोध लिखें और देखें कि वह कहाँ जाता और क्यों, बिना कुछ चलाए।
 
-[Roadmap](https://github.com/wesleysimplicio/simplicio-canvas/issues) · [MIT](../../LICENSE)
+कोड आपकी मशीन पर ही रहता है: फ़ाइलें ब्राउज़र में पढ़ी जाती हैं और कभी अपलोड नहीं होतीं।
+
+![Simplicio Canvas](../images/flows.png)
+
+[ट्रेस फ़ॉर्मैट](../trace-format.md) · [सिम्युलेशन](../simulation.md) · [MIT](../../LICENSE)

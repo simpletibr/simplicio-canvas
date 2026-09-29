@@ -1,0 +1,201 @@
+{
+  "schema": "simplicio.simulation-texts/v1",
+  "kinds": {
+    "console_script": {
+      "pt-BR": "script de console",
+      "en": "console script"
+    },
+    "cli_command": {
+      "pt-BR": "comando de CLI",
+      "en": "CLI command"
+    },
+    "mcp_tool": {
+      "pt-BR": "ferramenta MCP",
+      "en": "MCP tool"
+    },
+    "main": {
+      "pt-BR": "função main",
+      "en": "main function"
+    }
+  },
+  "labels": {
+    "what": {
+      "pt-BR": "O que acontece",
+      "en": "What happens"
+    },
+    "why": {
+      "pt-BR": "Por quê",
+      "en": "Why"
+    },
+    "io": {
+      "pt-BR": "Entrada → saída",
+      "en": "Input → output"
+    },
+    "failure": {
+      "pt-BR": "Se falhar",
+      "en": "If it fails"
+    },
+    "notes": {
+      "pt-BR": "Também",
+      "en": "Also"
+    },
+    "unknown": {
+      "pt-BR": "Não dá para saber sem executar",
+      "en": "Cannot be known without running"
+    }
+  },
+  "t": {
+    "entryWhy": {
+      "pt-BR": "Ponto de entrada escolhido: {kind} `{name}`, que executa a função `{function}` ({evidence}). O pedido “{request}” é o que dispara esta execução.",
+      "en": "Chosen entry point: {kind} `{name}`, which runs the function `{function}` ({evidence}). The request “{request}” is what starts this run."
+    },
+    "callWhy": {
+      "pt-BR": "Foi chamada por `{caller}` na linha {line} de `{callerFile}`.",
+      "en": "Called by `{caller}` at line {line} of `{callerFile}`."
+    },
+    "revisit": {
+      "pt-BR": "`{label}` já foi explicada acima; aqui `{caller}` a chama de novo (linha {line}). O comportamento é o mesmo.",
+      "en": "`{label}` was explained above; here `{caller}` calls it again (line {line}). The behaviour is the same."
+    },
+    "noDoc": {
+      "pt-BR": "`{label}` ({file}:{line}) não tem docstring nem comentário de documentação. A análise estática só mostra o que o código faz, sem dizer o propósito.",
+      "en": "`{label}` ({file}:{line}) has no docstring or doc comment. Static analysis only shows what the code does, not its purpose."
+    },
+    "params": {
+      "pt-BR": "Recebe: {params}.",
+      "en": "Takes: {params}."
+    },
+    "noParams": {
+      "pt-BR": "Não recebe parâmetros.",
+      "en": "Takes no parameters."
+    },
+    "returns": {
+      "pt-BR": "Devolve: `{returns}`.",
+      "en": "Returns: `{returns}`."
+    },
+    "returnsUnknown": {
+      "pt-BR": "O que devolve não está declarado no código.",
+      "en": "What it returns is not declared in the code."
+    },
+    "signatureUnknown": {
+      "pt-BR": "A assinatura não pôde ser lida do código.",
+      "en": "The signature could not be read from the code."
+    },
+    "calls": {
+      "pt-BR": "Depois chama, na ordem do código: {calls}.",
+      "en": "Then calls, in code order: {calls}."
+    },
+    "callItem": {
+      "pt-BR": "`{label}` (linha {line}){purpose}",
+      "en": "`{label}` (line {line}){purpose}"
+    },
+    "callPurpose": {
+      "pt-BR": " — {summary}",
+      "en": " — {summary}"
+    },
+    "noCalls": {
+      "pt-BR": "Não chama outras funções do projeto.",
+      "en": "Calls no other function of the project."
+    },
+    "moreCalls": {
+      "pt-BR": "{count} chamada(s) abaixo desta função não são seguidas por causa do limite de profundidade.",
+      "en": "{count} call(s) below this function are not followed because of the depth limit."
+    },
+    "external": {
+      "pt-BR": "Também usa funções sem código no projeto (bibliotecas ou embutidas): {names}.",
+      "en": "It also uses functions with no code in the project (libraries or builtins): {names}."
+    },
+    "ambiguous": {
+      "pt-BR": "Chamadas ambíguas, que a análise não sabe resolver: {names}.",
+      "en": "Ambiguous calls the analysis cannot resolve: {names}."
+    },
+    "raises": {
+      "pt-BR": "Pode levantar {errors} (há `raise` no código).",
+      "en": "May raise {errors} (there is a `raise` in the code)."
+    },
+    "noRaise": {
+      "pt-BR": "Não há `raise` no código. Falhas de chamadas externas ou da entrada não são decidíveis estaticamente.",
+      "en": "There is no `raise` in the code. Failures of external calls or of the input cannot be decided statically."
+    },
+    "mentioned": {
+      "pt-BR": "O pedido menciona `{name}`.",
+      "en": "The request mentions `{name}`."
+    },
+    "guard": {
+      "pt-BR": "Só acontece se {guards}. A análise estática não decide essa condição, por isso este passo é marcado como desconhecido.",
+      "en": "Only happens if {guards}. Static analysis cannot decide that condition, so this step is marked unknown."
+    },
+    "guardIf": {
+      "pt-BR": "`{text}`",
+      "en": "`{text}`"
+    },
+    "guardElse": {
+      "pt-BR": "`{text}` (depois de {after})",
+      "en": "`{text}` (after {after})"
+    },
+    "guardLoop": {
+      "pt-BR": "está dentro de um laço `{text}` (pode rodar 0 ou várias vezes)",
+      "en": "it is inside a loop `{text}` (may run 0 or several times)"
+    },
+    "guardExcept": {
+      "pt-BR": "o tratamento de erro `{text}` for acionado",
+      "en": "the error handler `{text}` is triggered"
+    },
+    "guardDef": {
+      "pt-BR": "`{text}` for chamada",
+      "en": "`{text}` is called"
+    },
+    "afterReturn": {
+      "pt-BR": "nenhum `return` anterior for executado (por exemplo `{text}`, linha {line})",
+      "en": "no earlier `return` is executed (for example `{text}`, line {line})"
+    },
+    "and": {
+      "pt-BR": " e ",
+      "en": " and "
+    },
+    "ambiguousStep": {
+      "pt-BR": "chamada ambígua: {name}",
+      "en": "ambiguous call: {name}"
+    },
+    "ambiguousWhat": {
+      "pt-BR": "`{caller}` chama `{name}` na linha {line}, mas há mais de um alvo possível ({candidates}). A análise estática não sabe qual deles roda, então o caminho fica marcado como desconhecido em vez de adivinhado.",
+      "en": "`{caller}` calls `{name}` at line {line}, but more than one target is possible ({candidates}). Static analysis cannot tell which one runs, so the path is marked unknown instead of guessed."
+    },
+    "ambiguousWhy": {
+      "pt-BR": "Chamada na linha {line}.",
+      "en": "Call at line {line}."
+    },
+    "ambiguousIo": {
+      "pt-BR": "Depende de qual candidato for o alvo real.",
+      "en": "Depends on which candidate is the real target."
+    },
+    "ambiguousFailure": {
+      "pt-BR": "Não decidível estaticamente.",
+      "en": "Not decidable statically."
+    },
+    "depthNote": {
+      "pt-BR": "A simulação segue no máximo {depth} níveis de chamadas a partir do ponto de entrada.",
+      "en": "The simulation follows at most {depth} levels of calls from the entry point."
+    },
+    "staticNote": {
+      "pt-BR": "Explicações vêm só do que o código mostra (docstrings, assinaturas, chamadas); nenhum modelo foi usado.",
+      "en": "Explanations come only from what the code shows (docstrings, signatures, calls); no model was used."
+    },
+    "noCallGraph": {
+      "pt-BR": "Este projeto não tem grafo de chamadas do Mapper; sem ele não há fluxo para simular.",
+      "en": "This project has no Mapper call graph; without it there is no flow to simulate."
+    },
+    "parentUnknown": {
+      "pt-BR": "O passo que a chama também é condicional.",
+      "en": "The step that calls it is conditional too."
+    },
+    "stepLimit": {
+      "pt-BR": "A simulação parou em {max} passos para não ficar longa demais.",
+      "en": "The simulation stopped at {max} steps to keep it short."
+    },
+    "request": {
+      "pt-BR": "(pedido vazio)",
+      "en": "(empty request)"
+    }
+  }
+}

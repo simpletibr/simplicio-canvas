@@ -1,0 +1,763 @@
+{
+  "schema": "simplicio.simulation-flow/v1",
+  "id": "simplicio-loop",
+  "version": "simplicio-loop 3.45.1 (host mode is the default)",
+  "title": {
+    "pt-BR": "simplicio-loop (modo host)",
+    "en": "simplicio-loop (host mode)"
+  },
+  "labels": {
+    "what": {
+      "pt-BR": "O que acontece",
+      "en": "What happens"
+    },
+    "why": {
+      "pt-BR": "Por quê",
+      "en": "Why"
+    },
+    "io": {
+      "pt-BR": "Entrada → saída",
+      "en": "Input → output"
+    },
+    "failure": {
+      "pt-BR": "Se falhar",
+      "en": "If it fails"
+    },
+    "unknown": {
+      "pt-BR": "Não dá para saber sem executar",
+      "en": "Cannot be known without running"
+    },
+    "item": {
+      "pt-BR": "item {item}",
+      "en": "item {item}"
+    },
+    "happyPath": {
+      "pt-BR": "Esta simulação mostra o caminho feliz. O resultado real (o plano é aceito, os testes passam) só se sabe executando: os passos marcados com “?” dependem disso.",
+      "en": "This simulation shows the happy path. The real outcome (the plan is accepted, the tests pass) is only known by running: steps marked “?” depend on it."
+    },
+    "noFile": {
+      "pt-BR": "nenhum arquivo citado",
+      "en": "no file named"
+    },
+    "tail": {
+      "pt-BR": "Simulado: nenhum comando foi executado e nenhum modelo foi chamado.",
+      "en": "Simulated: no command was run and no model was called."
+    },
+    "emptyRequest": {
+      "pt-BR": "(pedido vazio)",
+      "en": "(empty request)"
+    }
+  },
+  "nodes": [
+    {
+      "id": "skill",
+      "kind": "step",
+      "label": {
+        "pt-BR": "Skill invocada",
+        "en": "Skill invoked"
+      },
+      "explain": {
+        "what": {
+          "pt-BR": "Você digita o pedido no agente (por exemplo `/simplicio-loop {request}`). O agente carrega a skill simplicio-loop e passa a seguir o protocolo dela nesta conversa.",
+          "en": "You type the request in your agent (for example `/simplicio-loop {request}`). The agent loads the simplicio-loop skill and follows its protocol for this conversation."
+        },
+        "why": {
+          "pt-BR": "A skill garante o mesmo caminho toda vez: levantar o repositório, planejar, aplicar, verificar. Sem ela o agente improvisaria a ordem dos passos.",
+          "en": "The skill guarantees the same path every time: survey the repository, plan, apply, verify. Without it the agent would improvise the order of steps."
+        },
+        "input": {
+          "pt-BR": "O texto do pedido: “{request}”.",
+          "en": "The request text: “{request}”."
+        },
+        "output": {
+          "pt-BR": "O agente roda `simplicio-loop turbo` com esse pedido (no 3.45.1 esse é o comportamento padrão da skill).",
+          "en": "The agent runs `simplicio-loop turbo` with that request (in 3.45.1 this is the skill's default behaviour)."
+        },
+        "failure": {
+          "pt-BR": "Se a skill não estiver instalada, o agente não conhece o protocolo e trata o pedido como conversa comum: nada é levantado, aplicado nem verificado.",
+          "en": "If the skill is not installed the agent does not know the protocol and treats the request as plain chat: nothing is surveyed, applied or verified."
+        }
+      }
+    },
+    {
+      "id": "cli",
+      "kind": "command",
+      "label": {
+        "pt-BR": "simplicio-loop \"<pedido>\"",
+        "en": "simplicio-loop \"<request>\""
+      },
+      "explain": {
+        "what": {
+          "pt-BR": "O agente roda `simplicio-loop \"{request}\"` no terminal, dentro do repositório. O comando lê o pedido e o separa em tarefas ({tasks}). Arquivos citados no texto ({files}) viram alvo (o que muda) e contexto (o que o modelo precisa ler).",
+          "en": "The agent runs `simplicio-loop \"{request}\"` in the terminal, inside the repository. The command reads the request and splits it into tasks ({tasks}). Files named in the text ({files}) become the target (what changes) and context (what the model must read)."
+        },
+        "why": {
+          "pt-BR": "Citar o arquivo no pedido é o que permite recortar só o necessário. A documentação manda nomear todos os arquivos que serão alterados.",
+          "en": "Naming the file in the request is what lets the loop cut out only what is needed. The docs say to name every file that will change."
+        },
+        "input": {
+          "pt-BR": "Pedido em texto e o diretório do repositório.",
+          "en": "Request text and the repository directory."
+        },
+        "output": {
+          "pt-BR": "Uma lista de tarefas, cada uma com alvo e contexto.",
+          "en": "A list of tasks, each with a target and context."
+        },
+        "failure": {
+          "pt-BR": "Se o pedido não citar nenhum arquivo o alvo fica indefinido e o plano tende a falhar; nomeie o arquivo e rode de novo. Sem tarefas, o comando para com `status: blocked`.",
+          "en": "If the request names no file the target is not set and the plan tends to fail; name the file and run again. With no tasks the command stops with `status: blocked`."
+        }
+      }
+    },
+    {
+      "id": "queue_list",
+      "kind": "step",
+      "label": {
+        "pt-BR": "Fila: listar os itens",
+        "en": "Queue: list the items"
+      },
+      "explain": {
+        "what": {
+          "pt-BR": "O pedido “{request}” descreve uma fila, não uma tarefa. Antes de agir o loop lista o que há para fazer (por exemplo as issues abertas no GitHub, que é a fonte da verdade) e transforma cada item em uma tarefa.",
+          "en": "The request “{request}” describes a queue, not a single task. Before acting the loop lists what there is to do (for example the open GitHub issues, the source of truth) and turns each item into a task."
+        },
+        "why": {
+          "pt-BR": "Sem listar, não há como saber quantos itens existem nem em que ordem atacá-los.",
+          "en": "Without listing there is no way to know how many items exist or in which order to take them."
+        },
+        "input": {
+          "pt-BR": "O critério da fila (“{request}”) e a fonte (GitHub).",
+          "en": "The queue criterion (“{request}”) and the source (GitHub)."
+        },
+        "output": {
+          "pt-BR": "Uma lista de itens. A quantidade real só se sabe consultando a fonte: esta simulação mostra {items} itens apenas para ilustrar o laço.",
+          "en": "A list of items. The real count is only known by querying the source: this simulation shows {items} items just to illustrate the loop."
+        },
+        "failure": {
+          "pt-BR": "Sem acesso à fonte (login, rede ou permissão) a fila não é lida e o loop para com o motivo. Uma fila vazia termina logo, sem nenhum PR.",
+          "en": "Without access to the source (login, network or permission) the queue is not read and the loop stops with the reason. An empty queue ends right away, with no PR."
+        }
+      }
+    },
+    {
+      "id": "survey",
+      "kind": "tool",
+      "label": {
+        "pt-BR": "Mapper: levantamento do repositório",
+        "en": "Mapper: repository survey"
+      },
+      "explain": {
+        "what": {
+          "pt-BR": "O Mapper (`simplicio-mapper`) lê o repositório uma única vez e produz o mapa: arquivos, símbolos e chamadas. Se a árvore não mudou desde o último levantamento, o resultado vem do cache.",
+          "en": "Mapper (`simplicio-mapper`) reads the repository once and produces the map: files, symbols and calls. If the tree has not changed since the last survey the result comes from its cache."
+        },
+        "why": {
+          "pt-BR": "O mapa é o cabeçalho de todo pedido ao modelo. Levantar uma vez evita reler o repositório e mantém o cabeçalho idêntico, o que permite aproveitar o cache de prompt.",
+          "en": "The map is the header of every request to the model. Surveying once avoids re-reading the repository and keeps the header identical, so prompt caching can be used."
+        },
+        "input": {
+          "pt-BR": "O caminho do repositório.",
+          "en": "The repository path."
+        },
+        "output": {
+          "pt-BR": "`.simplicio-loop/project-map.json`, o índice de símbolos e o grafo de chamadas.",
+          "en": "`.simplicio-loop/project-map.json`, the symbol index and the call graph."
+        },
+        "failure": {
+          "pt-BR": "Se o Mapper não estiver instalado ou falhar, o loop bloqueia com o motivo em vez de seguir às cegas.",
+          "en": "If Mapper is not installed or fails, the loop blocks with the reason instead of going on blind."
+        }
+      },
+      "variants": {
+        "queue": {
+          "what": {
+            "pt-BR": "Para cada item, o Mapper levanta o repositório. Se a árvore não mudou desde o item anterior (nada foi mesclado ainda) o resultado vem do cache; depois de um merge a árvore mudou e o mapa é refeito.",
+            "en": "For each item Mapper surveys the repository. If the tree has not changed since the previous item (nothing merged yet) the result comes from the cache; after a merge the tree has changed and the map is rebuilt."
+          }
+        }
+      }
+    },
+    {
+      "id": "plan_request",
+      "kind": "step",
+      "label": {
+        "pt-BR": "Pedido de plano",
+        "en": "Plan request"
+      },
+      "explain": {
+        "what": {
+          "pt-BR": "O loop monta o pedido de plano e o imprime como um documento `simplicio.turbo-request/v1` com `status: needs_plan`. Com uma tarefa ele leva só o trecho do mapa que interessa, o conteúdo atual do arquivo alvo e o formato esperado da resposta: JSON com trocas `find`/`replace`.",
+          "en": "The loop builds the plan request and prints it as a `simplicio.turbo-request/v1` document with `status: needs_plan`. With one task it carries only the slice of the map that matters, the current content of the target file and the expected reply format: JSON with `find`/`replace` swaps."
+        },
+        "why": {
+          "pt-BR": "No modo host o loop não chama nenhum modelo: ele entrega ao agente tudo de que ele precisa para escrever o plano sozinho.",
+          "en": "In host mode the loop calls no model: it hands the agent everything it needs to write the plan itself."
+        },
+        "input": {
+          "pt-BR": "Mapa, arquivos alvo e contexto, e as tarefas.",
+          "en": "Map, target and context files, and the tasks."
+        },
+        "output": {
+          "pt-BR": "Um documento `needs_plan` com o `prompt`, o caminho onde gravar o plano (`plan_path`) e o comando `--apply` que vem depois.",
+          "en": "A `needs_plan` document with the `prompt`, the path where the plan must be saved (`plan_path`) and the `--apply` command that follows."
+        },
+        "failure": {
+          "pt-BR": "Se o levantamento ou a leitura dos arquivos falhar, o loop interrompe com um motivo explícito (`status: blocked`) em vez de emitir um pedido incompleto.",
+          "en": "If the survey or reading the files fails, the loop stops with an explicit reason (`status: blocked`) instead of emitting an incomplete request."
+        }
+      },
+      "variants": {
+        "many": {
+          "what": {
+            "pt-BR": "O loop monta o pedido de plano (`simplicio.turbo-request/v1`, `status: needs_plan`) para {tasks} tarefas. Com várias tarefas o mapa inteiro entra como cabeçalho idêntico, que fica em cache; o conteúdo atual dos arquivos e o formato JSON `find`/`replace` vêm em seguida.",
+            "en": "The loop builds the plan request (`simplicio.turbo-request/v1`, `status: needs_plan`) for {tasks} tasks. With several tasks the whole map goes in as an identical header that stays cached; the current file contents and the JSON `find`/`replace` format follow."
+          }
+        },
+        "provider": {
+          "what": {
+            "pt-BR": "No modo provider o motor monta o mesmo pedido (o mapa, o conteúdo dos arquivos e o formato JSON `find`/`replace`), mas em vez de imprimir um documento `needs_plan` ele mesmo o envia ao modelo no passo seguinte.",
+            "en": "In provider mode the engine builds the same request (the map, the file contents and the JSON `find`/`replace` format) but instead of printing a `needs_plan` document it sends it to the model itself in the next step."
+          }
+        }
+      }
+    },
+    {
+      "id": "fanout",
+      "kind": "step",
+      "label": {
+        "pt-BR": "Tarefas independentes: fan-out",
+        "en": "Independent tasks: fan-out"
+      },
+      "explain": {
+        "what": {
+          "pt-BR": "O pedido tem {tasks} tarefas que mexem em arquivos diferentes ({files}), em {lanes} lanes. Elas não dependem uma da outra, então cada lane é tratada por conta própria e pode andar em paralelo.",
+          "en": "The request has {tasks} tasks that touch different files ({files}), in {lanes} lanes. They do not depend on each other, so each lane is handled on its own and can run in parallel."
+        },
+        "why": {
+          "pt-BR": "Paralelizar reduz o tempo total. O cabeçalho com o mapa completo é o mesmo em todas as lanes, então fica em cache de prompt.",
+          "en": "Parallelising reduces total time. The header with the full map is the same for every lane, so it stays in the prompt cache."
+        },
+        "input": {
+          "pt-BR": "As tarefas e os arquivos de cada uma.",
+          "en": "The tasks and the files of each one."
+        },
+        "output": {
+          "pt-BR": "Uma lane por grupo de tarefas independentes.",
+          "en": "One lane per group of independent tasks."
+        },
+        "failure": {
+          "pt-BR": "Se uma lane falha as outras seguem: o resultado lista quais tarefas foram `applied` e quais `failed`, com o motivo de cada falha.",
+          "en": "If one lane fails the others go on: the result lists which tasks were `applied` and which `failed`, with the reason of each failure."
+        }
+      }
+    },
+    {
+      "id": "ordered",
+      "kind": "step",
+      "label": {
+        "pt-BR": "Mesmo arquivo: em ordem",
+        "en": "Same file: in order"
+      },
+      "explain": {
+        "what": {
+          "pt-BR": "As tarefas tocam o mesmo arquivo ({files}). Duas edições no mesmo arquivo não podem correr ao mesmo tempo: a segunda precisa enxergar o resultado da primeira. O loop marca a dependência (`depends_on`) e as executa uma depois da outra.",
+          "en": "The tasks touch the same file ({files}). Two edits to the same file cannot run at the same time: the second must see the result of the first. The loop records the dependency (`depends_on`) and runs them one after the other."
+        },
+        "why": {
+          "pt-BR": "Em paralelo, o `find` da segunda tarefa poderia deixar de existir depois da primeira mudar o arquivo, e a troca seria recusada.",
+          "en": "In parallel, the second task's `find` could stop existing once the first task changes the file, and the swap would be rejected."
+        },
+        "input": {
+          "pt-BR": "As tarefas na ordem em que foram escritas.",
+          "en": "The tasks in the order they were written."
+        },
+        "output": {
+          "pt-BR": "Uma fila de tarefas dependentes, aplicadas em sequência.",
+          "en": "A queue of dependent tasks applied in sequence."
+        },
+        "failure": {
+          "pt-BR": "Se uma tarefa da fila falha, o resultado mostra qual foi e por quê; as seguintes não devem ser tratadas como aplicadas.",
+          "en": "If a task in the queue fails the result shows which one and why; the following ones must not be treated as applied."
+        }
+      }
+    },
+    {
+      "id": "host_model",
+      "kind": "llm_call",
+      "label": {
+        "pt-BR": "O modelo do agente escreve o plano",
+        "en": "The agent's model writes the plan"
+      },
+      "explain": {
+        "what": {
+          "pt-BR": "O próprio modelo do agente que você está usando (por exemplo o Claude Code) lê o pedido de plano e escreve o plano: uma lista de trocas `find`/`replace`, cada uma com o arquivo e o trecho exato a substituir. Ele grava o plano em `plan_path`.",
+          "en": "The model of the agent you are using (for example Claude Code) reads the plan request and writes the plan: a list of `find`/`replace` swaps, each with the file and the exact text to replace. It saves the plan at `plan_path`."
+        },
+        "why": {
+          "pt-BR": "É aqui que a inteligência entra. O loop não faz chamada de LLM nesse modo: quem pensa é o modelo do agente, e o loop só executa o que ele decidiu. Por isso não há contagem de tokens nem custo neste passo dentro do loop.",
+          "en": "This is where the intelligence comes in. The loop makes no LLM call in this mode: the agent's model does the thinking and the loop only executes what it decided. That is why there is no token count or cost for this step inside the loop."
+        },
+        "input": {
+          "pt-BR": "O pedido de plano (`prompt`).",
+          "en": "The plan request (`prompt`)."
+        },
+        "output": {
+          "pt-BR": "Um arquivo JSON com as operações do plano.",
+          "en": "A JSON file with the plan's operations."
+        },
+        "failure": {
+          "pt-BR": "Se o modelo devolver algo que não é o JSON esperado, ou um `find` que não existe no arquivo, o plano é recusado no passo seguinte e o motivo volta para ele corrigir.",
+          "en": "If the model returns something that is not the expected JSON, or a `find` that does not exist in the file, the plan is rejected in the next step and the reason goes back to it to fix."
+        }
+      }
+    },
+    {
+      "id": "provider_warm",
+      "kind": "llm_call",
+      "label": {
+        "pt-BR": "Aquecimento do cache (provider)",
+        "en": "Cache warm-up (provider)"
+      },
+      "explain": {
+        "what": {
+          "pt-BR": "Com mais de 3 tarefas, a primeira chamada ao modelo roda sozinha. As outras só saem depois que ela termina e por isso encontram o cabeçalho (o mapa) já no cache de prompt.",
+          "en": "With more than 3 tasks the first model call runs alone. The others only go out after it finishes and therefore find the header (the map) already in the prompt cache."
+        },
+        "why": {
+          "pt-BR": "O cache de prompt só ajuda depois da primeira leitura: disparar todas juntas pagaria o cabeçalho várias vezes.",
+          "en": "The prompt cache only helps after the first read: firing everything at once would pay for the header several times."
+        },
+        "input": {
+          "pt-BR": "O cabeçalho (mapa) e a primeira lane.",
+          "en": "The header (map) and the first lane."
+        },
+        "output": {
+          "pt-BR": "A resposta da primeira lane e o cache aquecido.",
+          "en": "The first lane's answer and a warm cache."
+        },
+        "failure": {
+          "pt-BR": "Se essa primeira chamada falhar, as demais lanes não chegam a sair: o comando termina com o motivo.",
+          "en": "If this first call fails the other lanes are never sent: the command ends with the reason."
+        }
+      }
+    },
+    {
+      "id": "provider_call",
+      "kind": "llm_call",
+      "label": {
+        "pt-BR": "Chamada ao modelo (OpenRouter)",
+        "en": "Model call (OpenRouter)"
+      },
+      "explain": {
+        "what": {
+          "pt-BR": "Com `--provider openrouter` o próprio `simplicio-loop` chama o modelo: OpenRouter, `deepseek/deepseek-v4.1-flash` por padrão (troca com `SIMPLICIO_TURBO_MODEL`), sessão fixa por repositório e raciocínio (reasoning) desligado. Uma chamada por lane; até 3 tarefas compartilham uma chamada.",
+          "en": "With `--provider openrouter` `simplicio-loop` itself calls the model: OpenRouter, `deepseek/deepseek-v4.1-flash` by default (override with `SIMPLICIO_TURBO_MODEL`), a session pinned per repository and reasoning off. One call per lane; up to 3 tasks share a call."
+        },
+        "why": {
+          "pt-BR": "Automatiza o passo do modelo quando não há um agente ao lado e mede tokens, custo e latência de cada chamada.",
+          "en": "It automates the model step when there is no agent alongside and measures tokens, cost and latency of every call."
+        },
+        "input": {
+          "pt-BR": "Cabeçalho (mapa) mais as tarefas e o conteúdo dos arquivos.",
+          "en": "Header (map) plus the tasks and file contents."
+        },
+        "output": {
+          "pt-BR": "Um plano `find`/`replace` e as métricas da chamada (tokens, custo, latência).",
+          "en": "A `find`/`replace` plan and the call's metrics (tokens, cost, latency)."
+        },
+        "failure": {
+          "pt-BR": "Sem `OPENROUTER_API_KEY` o comando para com `status: blocked` (`turbo_provider_key_missing`) e sai com código 2; nenhuma chamada é feita.",
+          "en": "Without `OPENROUTER_API_KEY` the command stops with `status: blocked` (`turbo_provider_key_missing`) and exits with code 2; no call is made."
+        }
+      }
+    },
+    {
+      "id": "provider_hedge",
+      "kind": "llm_call",
+      "label": {
+        "pt-BR": "Requisição hedged (se a resposta demorar)",
+        "en": "Hedged request (if the answer is slow)"
+      },
+      "explain": {
+        "what": {
+          "pt-BR": "Se a resposta demora, o motor dispara uma segunda requisição idêntica (hedge) e fica com a primeira que responder. A perdedora também é cobrada.",
+          "en": "If the answer is slow the engine fires a second, identical request (a hedge) and keeps whichever answers first. The loser is billed too."
+        },
+        "why": {
+          "pt-BR": "Corta a cauda de latência de provedores lentos por uma pequena fração de custo extra.",
+          "en": "It cuts the latency tail of slow providers for a small share of extra cost."
+        },
+        "input": {
+          "pt-BR": "A mesma requisição.",
+          "en": "The same request."
+        },
+        "output": {
+          "pt-BR": "A resposta que chegar primeiro.",
+          "en": "Whichever answer arrives first."
+        },
+        "failure": {
+          "pt-BR": "Só acontece quando a chamada é lenta, e isso não dá para saber sem executar: por isso este passo fica marcado como desconhecido.",
+          "en": "It only happens when the call is slow, and that cannot be known without running: this step is therefore marked as unknown."
+        }
+      }
+    },
+    {
+      "id": "apply",
+      "kind": "file_edit",
+      "label": {
+        "pt-BR": "turbo --apply: o dev-cli aplica o plano",
+        "en": "turbo --apply: dev-cli applies the plan"
+      },
+      "explain": {
+        "what": {
+          "pt-BR": "`simplicio-loop turbo --apply` lê o plano e entrega ao `simplicio-dev-cli`, que compila cada troca e a aplica no arquivo. Cada `find` precisa aparecer exatamente uma vez.",
+          "en": "`simplicio-loop turbo --apply` reads the plan and hands it to `simplicio-dev-cli`, which compiles each swap and applies it to the file. Each `find` must appear exactly once."
+        },
+        "why": {
+          "pt-BR": "A edição é mecânica e verificável: quem edita é o dev-cli, não o modelo. Assim uma troca ambígua é recusada em vez de errar em silêncio.",
+          "en": "Editing is mechanical and checkable: dev-cli edits, not the model. An ambiguous swap is therefore rejected instead of being wrong silently."
+        },
+        "input": {
+          "pt-BR": "O plano JSON.",
+          "en": "The JSON plan."
+        },
+        "output": {
+          "pt-BR": "Arquivos alterados e, por tarefa, `applied` ou o motivo da recusa.",
+          "en": "Changed files and, per task, `applied` or the reason for rejection."
+        },
+        "failure": {
+          "pt-BR": "Recusas possíveis: `plan_path_not_found` (o arquivo não existe), `plan_path_not_authorized` (fora do repositório), `plan_find_not_found` (trecho não encontrado) e `plan_find_not_unique` (trecho repetido). A troca recusada não é aplicada e o motivo segue para a correção.",
+          "en": "Possible rejections: `plan_path_not_found` (the file does not exist), `plan_path_not_authorized` (outside the repository), `plan_find_not_found` (text not found) and `plan_find_not_unique` (text repeated). A rejected swap is not applied and the reason goes on to the fix."
+        }
+      },
+      "variants": {
+        "many": {
+          "what": {
+            "pt-BR": "`simplicio-loop turbo --apply` lê o plano e entrega ao `simplicio-dev-cli`, que compila cada troca e a aplica. Com várias tarefas o resultado é dado por tarefa: `applied` para as que entraram e `failed` (com o motivo) para as recusadas.",
+            "en": "`simplicio-loop turbo --apply` reads the plan and hands it to `simplicio-dev-cli`, which compiles each swap and applies it. With several tasks the result is reported per task: `applied` for those that went in and `failed` (with the reason) for those rejected."
+          }
+        },
+        "provider": {
+          "what": {
+            "pt-BR": "No modo provider o motor recebe o plano da própria chamada ao modelo e o entrega ao `simplicio-dev-cli` sem precisar de `--apply`. O dev-cli compila cada troca `find`/`replace` e a aplica; cada `find` precisa aparecer exatamente uma vez.",
+            "en": "In provider mode the engine takes the plan from its own model call and hands it to `simplicio-dev-cli` without needing `--apply`. dev-cli compiles each `find`/`replace` swap and applies it; each `find` must appear exactly once."
+          }
+        }
+      }
+    },
+    {
+      "id": "verify",
+      "kind": "verify",
+      "label": {
+        "pt-BR": "--verify: roda os testes",
+        "en": "--verify: run the tests"
+      },
+      "explain": {
+        "what": {
+          "pt-BR": "Se você passou `--verify \"<comando>\"` (por exemplo os testes), o loop roda esse comando no repositório depois que os planos foram aplicados e guarda o final da saída.",
+          "en": "If you passed `--verify \"<command>\"` (for example the tests), the loop runs that command in the repository after the plans were applied and keeps the tail of its output."
+        },
+        "why": {
+          "pt-BR": "“Compila” não basta: o critério de pronto exige que a verificação passe. Ela só roda se todos os planos foram aplicados.",
+          "en": "“It compiles” is not enough: the done criterion requires the verification to pass. It only runs when every plan was applied."
+        },
+        "input": {
+          "pt-BR": "O comando de verificação e o repositório já alterado.",
+          "en": "The verify command and the already changed repository."
+        },
+        "output": {
+          "pt-BR": "`verify.passed` (verdadeiro ou falso), o código de saída e o fim da saída.",
+          "en": "`verify.passed` (true or false), the exit code and the end of the output."
+        },
+        "failure": {
+          "pt-BR": "Se os testes falharem, a saída deles vai para o modelo no passo seguinte. Sem `--verify` esta etapa não existe e “pronto” fica sem prova de testes.",
+          "en": "If the tests fail their output goes to the model in the next step. Without `--verify` this step does not exist and “done” has no test proof."
+        }
+      }
+    },
+    {
+      "id": "fix",
+      "kind": "llm_call",
+      "label": {
+        "pt-BR": "Falhou? O modelo corrige o plano (uma vez)",
+        "en": "Failed? The model fixes the plan (once)"
+      },
+      "explain": {
+        "what": {
+          "pt-BR": "Se a verificação falhar (ou o dev-cli recusar o plano), o motivo volta ao modelo. Ele corrige o plano uma única vez; o dev-cli aplica de novo e o verify roda outra vez.",
+          "en": "If verification fails (or dev-cli rejects the plan) the reason goes back to the model. It fixes the plan once; dev-cli applies again and verify runs again."
+        },
+        "why": {
+          "pt-BR": "Uma segunda chance resolve os erros pequenos (um `find` errado, um teste esquecido) sem transformar o loop em tentativa infinita.",
+          "en": "A second chance fixes the small mistakes (a wrong `find`, a forgotten test) without turning the loop into an endless retry."
+        },
+        "input": {
+          "pt-BR": "O motivo da recusa ou a saída dos testes.",
+          "en": "The rejection reason or the test output."
+        },
+        "output": {
+          "pt-BR": "Um plano corrigido, aplicado e verificado de novo.",
+          "en": "A corrected plan, applied and verified again."
+        },
+        "failure": {
+          "pt-BR": "Se falhar de novo o loop para com `status: failed`: não há terceira tentativa automática. Só acontece se algo falhar, e isso não dá para saber sem executar.",
+          "en": "If it fails again the loop stops with `status: failed`: there is no automatic third attempt. It only happens if something fails, and that cannot be known without running."
+        }
+      },
+      "variants": {
+        "provider": {
+          "what": {
+            "pt-BR": "Se a verificação falhar, o motor manda a saída dos testes ao modelo em uma chamada de reparo, aplica o plano corrigido e roda o verify de novo. Só uma tentativa.",
+            "en": "If verification fails the engine sends the test output to the model in a repair call, applies the corrected plan and runs verify again. One attempt only."
+          }
+        }
+      }
+    },
+    {
+      "id": "pr",
+      "kind": "command",
+      "label": {
+        "pt-BR": "Abre um PR do item",
+        "en": "Open a PR for the item"
+      },
+      "explain": {
+        "what": {
+          "pt-BR": "Com o item verificado, o loop cria uma branch, faz o commit da mudança e abre um pull request (`gh pr create`) que descreve o que foi feito e a evidência. É um PR por item.",
+          "en": "With the item verified, the loop creates a branch, commits the change and opens a pull request (`gh pr create`) describing what was done and the evidence. One PR per item."
+        },
+        "why": {
+          "pt-BR": "O GitHub é a fonte da verdade: o trabalho só conta como entregue quando há um PR (ou evidência concreta) ligado ao item.",
+          "en": "GitHub is the source of truth: work only counts as delivered when a PR (or concrete evidence) is tied to the item."
+        },
+        "input": {
+          "pt-BR": "As mudanças verificadas do item e o item de origem (a issue).",
+          "en": "The item's verified changes and the source item (the issue)."
+        },
+        "output": {
+          "pt-BR": "A URL do PR, ligada à issue.",
+          "en": "The PR URL, linked to the issue."
+        },
+        "failure": {
+          "pt-BR": "Sem permissão de push ou sem `gh` autenticado o PR não abre e o item continua como não entregue.",
+          "en": "Without push permission or an authenticated `gh` the PR does not open and the item stays undelivered."
+        }
+      }
+    },
+    {
+      "id": "done",
+      "kind": "step",
+      "label": {
+        "pt-BR": "Pronto: status ok e verify passou",
+        "en": "Done: status ok and verify passed"
+      },
+      "explain": {
+        "what": {
+          "pt-BR": "O loop imprime um único documento JSON (`simplicio.turbo-run/v1`) com `status`, `applied`, `failed` e `verify`. “Pronto” significa `status: ok` e, se houve `--verify`, `verify.passed` verdadeiro. Só então a promessa (`<promise>`) é emitida.",
+          "en": "The loop prints a single JSON document (`simplicio.turbo-run/v1`) with `status`, `applied`, `failed` and `verify`. “Done” means `status: ok` and, if `--verify` was given, `verify.passed` true. Only then is the promise (`<promise>`) emitted."
+        },
+        "why": {
+          "pt-BR": "A promessa só vale com evidência: o loop não declara vitória por conta própria.",
+          "en": "The promise only counts with evidence: the loop does not declare victory on its own."
+        },
+        "input": {
+          "pt-BR": "O resultado do apply e do verify.",
+          "en": "The result of apply and verify."
+        },
+        "output": {
+          "pt-BR": "O documento de resultado e a promessa `<promise>`.",
+          "en": "The result document and the `<promise>` promise."
+        },
+        "failure": {
+          "pt-BR": "Com `status: failed` ou `blocked` a promessa não é emitida e o loop continua ou para, conforme o limite de iterações.",
+          "en": "With `status: failed` or `blocked` the promise is not emitted and the loop goes on or stops, depending on the iteration cap."
+        }
+      },
+      "variants": {
+        "queue": {
+          "what": {
+            "pt-BR": "Quando todos os itens da fila foram tratados, o loop imprime o resultado e emite a promessa (`<promise>`). Cada item já tem o seu PR; o resultado só é “pronto” se `status` for `ok` e o `verify` passou em todos.",
+            "en": "When every item in the queue has been handled the loop prints the result and emits the promise (`<promise>`). Each item already has its PR; the result is only “done” if `status` is `ok` and `verify` passed for all."
+          }
+        }
+      }
+    }
+  ],
+  "edges": [
+    {
+      "from": "skill",
+      "to": "cli"
+    },
+    {
+      "from": "cli",
+      "to": "survey"
+    },
+    {
+      "from": "cli",
+      "to": "queue_list",
+      "label": {
+        "pt-BR": "fila",
+        "en": "queue"
+      }
+    },
+    {
+      "from": "queue_list",
+      "to": "survey",
+      "label": {
+        "pt-BR": "cada item",
+        "en": "each item"
+      }
+    },
+    {
+      "from": "survey",
+      "to": "plan_request"
+    },
+    {
+      "from": "plan_request",
+      "to": "host_model"
+    },
+    {
+      "from": "plan_request",
+      "to": "fanout",
+      "label": {
+        "pt-BR": "tarefas independentes",
+        "en": "independent tasks"
+      }
+    },
+    {
+      "from": "plan_request",
+      "to": "ordered",
+      "label": {
+        "pt-BR": "mesmo arquivo",
+        "en": "same file"
+      }
+    },
+    {
+      "from": "fanout",
+      "to": "host_model"
+    },
+    {
+      "from": "ordered",
+      "to": "host_model"
+    },
+    {
+      "from": "plan_request",
+      "to": "provider_warm",
+      "label": {
+        "pt-BR": "--provider, mais de 3 tarefas",
+        "en": "--provider, more than 3 tasks"
+      }
+    },
+    {
+      "from": "plan_request",
+      "to": "provider_call",
+      "label": {
+        "pt-BR": "--provider",
+        "en": "--provider"
+      }
+    },
+    {
+      "from": "provider_warm",
+      "to": "provider_call"
+    },
+    {
+      "from": "provider_call",
+      "to": "provider_hedge",
+      "label": {
+        "pt-BR": "se demorar",
+        "en": "if slow"
+      }
+    },
+    {
+      "from": "host_model",
+      "to": "apply"
+    },
+    {
+      "from": "provider_call",
+      "to": "apply"
+    },
+    {
+      "from": "provider_hedge",
+      "to": "apply"
+    },
+    {
+      "from": "apply",
+      "to": "verify"
+    },
+    {
+      "from": "verify",
+      "to": "done",
+      "label": {
+        "pt-BR": "passou",
+        "en": "passed"
+      }
+    },
+    {
+      "from": "verify",
+      "to": "fix",
+      "label": {
+        "pt-BR": "falhou",
+        "en": "failed"
+      }
+    },
+    {
+      "from": "fix",
+      "to": "done",
+      "label": {
+        "pt-BR": "corrigido",
+        "en": "fixed"
+      }
+    },
+    {
+      "from": "verify",
+      "to": "pr",
+      "label": {
+        "pt-BR": "por item",
+        "en": "per item"
+      }
+    },
+    {
+      "from": "fix",
+      "to": "pr"
+    },
+    {
+      "from": "pr",
+      "to": "survey",
+      "label": {
+        "pt-BR": "próximo item",
+        "en": "next item"
+      }
+    },
+    {
+      "from": "pr",
+      "to": "done",
+      "label": {
+        "pt-BR": "fila vazia",
+        "en": "queue empty"
+      }
+    },
+    {
+      "from": "fanout",
+      "to": "ordered",
+      "label": {
+        "pt-BR": "e em ordem",
+        "en": "and in order"
+      }
+    },
+    {
+      "from": "fanout",
+      "to": "provider_warm"
+    },
+    {
+      "from": "ordered",
+      "to": "provider_warm"
+    },
+    {
+      "from": "fanout",
+      "to": "provider_call"
+    },
+    {
+      "from": "ordered",
+      "to": "provider_call"
+    }
+  ]
+}

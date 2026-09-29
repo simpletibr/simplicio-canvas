@@ -1,7 +1,7 @@
 {
   "name": "Simplicio Canvas",
   "short_name": "Canvas",
-  "description": "Local-first visual map of software projects.",
+  "description": "Local-first 2D flow viewer: static flows of a project and step-by-step replays of real or simulated runs.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

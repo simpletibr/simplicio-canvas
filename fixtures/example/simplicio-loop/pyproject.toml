@@ -1,0 +1,12 @@
+[project]
+name = "simplicio-loop"
+version = "3.45.1"
+requires-python = ">=3.11"
+dependencies = ["mcp>=1.2"]
+
+[project.scripts]
+simplicio-loop = "simplicio_loop.cli:main"
+simplicio-loop-mcp = "simplicio_loop.mcp_server:serve"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

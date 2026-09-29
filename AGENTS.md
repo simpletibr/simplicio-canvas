@@ -10,7 +10,7 @@ Read `docs/PRODUCT_SPEC.md` and `planning/backlog.json` before changing code.
 6. Put evidence paths/commands into `evidence`, set `status: done`, then commit with the task id.
 7. If blocked, set `status: blocked` and record the exact error and attempted recovery. Never invent completion.
 
-Architecture rules: domain code cannot import UI/Three.js; scanners produce the canonical graph schema; renderers consume it; filesystem access stays local-first; generated code always requires preview, validation, and explicit apply.
+Architecture rules: domain code cannot import UI code (React, React Flow); scanners produce the canonical graph schema; renderers consume it; filesystem access stays local-first; generated code always requires preview, validation, and explicit apply.
 
 ## Definition of Done
 

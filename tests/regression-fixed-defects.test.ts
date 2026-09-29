@@ -16,7 +16,7 @@ describe('regression: previously shipped defects stay fixed', () => {
     expect(PUBLIC_DEMO_POLICY.canImportGitHub).toBe(false)
     expect(PUBLIC_DEMO_POLICY.canEditSource).toBe(false)
     expect(PUBLIC_DEMO_POLICY.canSaveSource).toBe(false)
-    expect(PUBLIC_DEMO_POLICY.canMovePieces).toBe(false)
+    expect(PUBLIC_DEMO_POLICY.canMoveNodes).toBe(false)
     expect(PUBLIC_DEMO_POLICY.canRunProcesses).toBe(false)
     expect(PUBLIC_DEMO_POLICY.canReadBundledExample).toBe(true)
   })

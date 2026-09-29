@@ -1,0 +1,967 @@
+{
+ "schema": "simplicio.call-graph/v1",
+ "edges": [
+  {
+   "type": "calls",
+   "source_file": "hooks/loop_stop.py",
+   "source_symbol": "hooks/loop_stop.py::promise_is_true",
+   "target_file": "hooks/loop_stop.py",
+   "target_symbol": "hooks/loop_stop.py::main",
+   "line": 18,
+   "resolution_status": "ambiguous",
+   "evidence_class": "lexical_ambiguous",
+   "target_candidates": [
+    "hooks/loop_stop.py::main",
+    "simplicio_loop/cli.py::main"
+   ]
+  },
+  {
+   "type": "calls",
+   "source_file": "hooks/loop_stop.py",
+   "source_symbol": "hooks/loop_stop.py::main",
+   "target_file": "hooks/loop_stop.py",
+   "target_symbol": "hooks/loop_stop.py::promise_is_true",
+   "line": 9,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "hooks/loop_stop.py",
+   "source_symbol": "hooks/loop_stop.py::promise_is_true",
+   "target_file": "simplicio_loop/cli.py",
+   "target_symbol": "simplicio_loop/cli.py::main",
+   "line": 18,
+   "resolution_status": "ambiguous",
+   "evidence_class": "lexical_ambiguous",
+   "target_candidates": [
+    "hooks/loop_stop.py::main",
+    "simplicio_loop/cli.py::main"
+   ]
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/cli.py",
+   "source_symbol": "simplicio_loop/cli.py::print_usage",
+   "target_file": "hooks/loop_stop.py",
+   "target_symbol": "hooks/loop_stop.py::main",
+   "line": 27,
+   "resolution_status": "ambiguous",
+   "evidence_class": "lexical_ambiguous",
+   "target_candidates": [
+    "hooks/loop_stop.py::main",
+    "simplicio_loop/cli.py::main"
+   ]
+  },
+  {
+   "type": "imports",
+   "source_file": "simplicio_loop/cli.py",
+   "target_file": "simplicio_loop/__init__.py",
+   "resolution_status": "resolved",
+   "evidence_class": "import_resolved"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/cli.py",
+   "source_symbol": "simplicio_loop/cli.py::print_usage",
+   "target_file": "simplicio_loop/cli.py",
+   "target_symbol": "simplicio_loop/cli.py::main",
+   "line": 27,
+   "resolution_status": "ambiguous",
+   "evidence_class": "lexical_ambiguous",
+   "target_candidates": [
+    "hooks/loop_stop.py::main",
+    "simplicio_loop/cli.py::main"
+   ]
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/cli.py",
+   "source_symbol": "simplicio_loop/cli.py::main",
+   "target_file": "simplicio_loop/cli.py",
+   "target_symbol": "simplicio_loop/cli.py::print_usage",
+   "line": 13,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/cli.py",
+   "source_symbol": "simplicio_loop/cli.py::main",
+   "target_file": "simplicio_loop/orchestrator.py",
+   "target_symbol": "simplicio_loop/orchestrator.py::orient",
+   "line": 17,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/cli.py",
+   "source_symbol": "simplicio_loop/cli.py::print_usage",
+   "target_file": "simplicio_loop/report.py",
+   "target_symbol": "simplicio_loop/report.py::emit",
+   "line": 22,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/cli.py",
+   "source_symbol": "simplicio_loop/cli.py::main",
+   "target_file": "simplicio_loop/turbo_cli.py",
+   "target_symbol": "simplicio_loop/turbo_cli.py::run_turbo_command",
+   "line": 16,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/dev_cli.py",
+   "source_symbol": "simplicio_loop/dev_cli.py::compile_operation",
+   "target_file": "simplicio_loop/dev_cli.py",
+   "target_symbol": "simplicio_loop/dev_cli.py::check_unique",
+   "line": 21,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/dev_cli.py",
+   "source_symbol": "simplicio_loop/dev_cli.py::apply_operations",
+   "target_file": "simplicio_loop/dev_cli.py",
+   "target_symbol": "simplicio_loop/dev_cli.py::compile_operation",
+   "line": 8,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "imports",
+   "source_file": "simplicio_loop/host_mode.py",
+   "target_file": "simplicio_loop/__init__.py",
+   "resolution_status": "resolved",
+   "evidence_class": "import_resolved"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/host_mode.py",
+   "source_symbol": "simplicio_loop/host_mode.py::request_plan",
+   "target_file": "simplicio_loop/prompts.py",
+   "target_symbol": "simplicio_loop/prompts.py::build_plan_prompt",
+   "line": 7,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/host_mode.py",
+   "source_symbol": "simplicio_loop/host_mode.py::request_plan",
+   "target_file": "simplicio_loop/report.py",
+   "target_symbol": "simplicio_loop/report.py::emit",
+   "line": 8,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/mapper_client.py",
+   "source_symbol": "simplicio_loop/mapper_client.py::survey",
+   "target_file": "simplicio_loop/mapper_client.py",
+   "target_symbol": "simplicio_loop/mapper_client.py::load_map",
+   "line": 11,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "imports",
+   "source_file": "simplicio_loop/mcp_server.py",
+   "target_file": "simplicio_loop/__init__.py",
+   "resolution_status": "resolved",
+   "evidence_class": "import_resolved"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/mcp_server.py",
+   "source_symbol": "simplicio_loop/mcp_server.py::simplicio_survey",
+   "target_file": "simplicio_loop/mapper_client.py",
+   "target_symbol": "simplicio_loop/mapper_client.py::survey",
+   "line": 18,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/mcp_server.py",
+   "source_symbol": "simplicio_loop/mcp_server.py::simplicio_turbo",
+   "target_file": "simplicio_loop/turbo_cli.py",
+   "target_symbol": "simplicio_loop/turbo_cli.py::run_turbo_command",
+   "line": 12,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "imports",
+   "source_file": "simplicio_loop/orchestrator.py",
+   "target_file": "simplicio_loop/__init__.py",
+   "resolution_status": "resolved",
+   "evidence_class": "import_resolved"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/orchestrator.py",
+   "source_symbol": "simplicio_loop/orchestrator.py::orient",
+   "target_file": "simplicio_loop/mapper_client.py",
+   "target_symbol": "simplicio_loop/mapper_client.py::survey",
+   "line": 8,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/orchestrator.py",
+   "source_symbol": "simplicio_loop/orchestrator.py::orient",
+   "target_file": "simplicio_loop/report.py",
+   "target_symbol": "simplicio_loop/report.py::emit",
+   "line": 9,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "imports",
+   "source_file": "simplicio_loop/prompts.py",
+   "target_file": "simplicio_loop/__init__.py",
+   "resolution_status": "resolved",
+   "evidence_class": "import_resolved"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/prompts.py",
+   "source_symbol": "simplicio_loop/prompts.py::build_plan_prompt",
+   "target_file": "simplicio_loop/mapper_client.py",
+   "target_symbol": "simplicio_loop/mapper_client.py::map_slice",
+   "line": 9,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/prompts.py",
+   "source_symbol": "simplicio_loop/prompts.py::build_plan_prompt",
+   "target_file": "simplicio_loop/prompts.py",
+   "target_symbol": "simplicio_loop/prompts.py::read_files",
+   "line": 10,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/prompts.py",
+   "source_symbol": "simplicio_loop/prompts.py::build_plan_prompt",
+   "target_file": "simplicio_loop/prompts.py",
+   "target_symbol": "simplicio_loop/prompts.py::render_tasks",
+   "line": 10,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "imports",
+   "source_file": "simplicio_loop/turbo.py",
+   "target_file": "simplicio_loop/__init__.py",
+   "resolution_status": "resolved",
+   "evidence_class": "import_resolved"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo.py",
+   "source_symbol": "simplicio_loop/turbo.py::apply_plan",
+   "target_file": "simplicio_loop/dev_cli.py",
+   "target_symbol": "simplicio_loop/dev_cli.py::apply_operations",
+   "line": 8,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo.py",
+   "source_symbol": "simplicio_loop/turbo.py::run_with_provider",
+   "target_file": "simplicio_loop/dev_cli.py",
+   "target_symbol": "simplicio_loop/dev_cli.py::apply_operations",
+   "line": 20,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo.py",
+   "source_symbol": "simplicio_loop/turbo.py::repair_plan",
+   "target_file": "simplicio_loop/dev_cli.py",
+   "target_symbol": "simplicio_loop/dev_cli.py::apply_operations",
+   "line": 38,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo.py",
+   "source_symbol": "simplicio_loop/turbo.py::apply_plan",
+   "target_file": "simplicio_loop/plan_store.py",
+   "target_symbol": "simplicio_loop/plan_store.py::read_plan",
+   "line": 7,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo.py",
+   "source_symbol": "simplicio_loop/turbo.py::run_with_provider",
+   "target_file": "simplicio_loop/prompts.py",
+   "target_symbol": "simplicio_loop/prompts.py::build_plan_prompt",
+   "line": 18,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo.py",
+   "source_symbol": "simplicio_loop/turbo.py::warm_up",
+   "target_file": "simplicio_loop/prompts.py",
+   "target_symbol": "simplicio_loop/prompts.py::build_plan_prompt",
+   "line": 30,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo.py",
+   "source_symbol": "simplicio_loop/turbo.py::repair_plan",
+   "target_file": "simplicio_loop/prompts.py",
+   "target_symbol": "simplicio_loop/prompts.py::build_plan_prompt",
+   "line": 36,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo.py",
+   "source_symbol": "simplicio_loop/turbo.py::run_with_provider",
+   "target_file": "simplicio_loop/turbo.py",
+   "target_symbol": "simplicio_loop/turbo.py::split_lanes",
+   "line": 13,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo.py",
+   "source_symbol": "simplicio_loop/turbo.py::run_with_provider",
+   "target_file": "simplicio_loop/turbo.py",
+   "target_symbol": "simplicio_loop/turbo.py::warm_up",
+   "line": 15,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo.py",
+   "source_symbol": "simplicio_loop/turbo.py::warm_up",
+   "target_file": "simplicio_loop/turbo_provider.py",
+   "target_symbol": "simplicio_loop/turbo_provider.py::complete",
+   "line": 31,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo.py",
+   "source_symbol": "simplicio_loop/turbo.py::repair_plan",
+   "target_file": "simplicio_loop/turbo_provider.py",
+   "target_symbol": "simplicio_loop/turbo_provider.py::complete",
+   "line": 37,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo.py",
+   "source_symbol": "simplicio_loop/turbo.py::run_with_provider",
+   "target_file": "simplicio_loop/turbo_provider.py",
+   "target_symbol": "simplicio_loop/turbo_provider.py::complete_hedged",
+   "line": 19,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "imports",
+   "source_file": "simplicio_loop/turbo_cli.py",
+   "target_file": "simplicio_loop/__init__.py",
+   "resolution_status": "resolved",
+   "evidence_class": "import_resolved"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo_cli.py",
+   "source_symbol": "simplicio_loop/turbo_cli.py::run_turbo_command",
+   "target_file": "simplicio_loop/host_mode.py",
+   "target_symbol": "simplicio_loop/host_mode.py::request_plan",
+   "line": 19,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo_cli.py",
+   "source_symbol": "simplicio_loop/turbo_cli.py::run_turbo_command",
+   "target_file": "simplicio_loop/mapper_client.py",
+   "target_symbol": "simplicio_loop/mapper_client.py::survey",
+   "line": 13,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo_cli.py",
+   "source_symbol": "simplicio_loop/turbo_cli.py::run_turbo_command",
+   "target_file": "simplicio_loop/report.py",
+   "target_symbol": "simplicio_loop/report.py::emit",
+   "line": 24,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo_cli.py",
+   "source_symbol": "simplicio_loop/turbo_cli.py::run_turbo_command",
+   "target_file": "simplicio_loop/turbo.py",
+   "target_symbol": "simplicio_loop/turbo.py::apply_plan",
+   "line": 15,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo_cli.py",
+   "source_symbol": "simplicio_loop/turbo_cli.py::run_turbo_command",
+   "target_file": "simplicio_loop/turbo.py",
+   "target_symbol": "simplicio_loop/turbo.py::repair_plan",
+   "line": 23,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo_cli.py",
+   "source_symbol": "simplicio_loop/turbo_cli.py::run_turbo_command",
+   "target_file": "simplicio_loop/turbo.py",
+   "target_symbol": "simplicio_loop/turbo.py::run_with_provider",
+   "line": 17,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo_cli.py",
+   "source_symbol": "simplicio_loop/turbo_cli.py::run_turbo_command",
+   "target_file": "simplicio_loop/turbo_cli.py",
+   "target_symbol": "simplicio_loop/turbo_cli.py::build_tasks",
+   "line": 12,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo_cli.py",
+   "source_symbol": "simplicio_loop/turbo_cli.py::build_tasks",
+   "target_file": "simplicio_loop/turbo_cli.py",
+   "target_symbol": "simplicio_loop/turbo_cli.py::mentioned_paths",
+   "line": 52,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo_cli.py",
+   "source_symbol": "simplicio_loop/turbo_cli.py::run_turbo_command",
+   "target_file": "simplicio_loop/turbo_cli.py",
+   "target_symbol": "simplicio_loop/turbo_cli.py::parse_options",
+   "line": 11,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo_cli.py",
+   "source_symbol": "simplicio_loop/turbo_cli.py::build_tasks",
+   "target_file": "simplicio_loop/turbo_cli.py",
+   "target_symbol": "simplicio_loop/turbo_cli.py::split_request",
+   "line": 51,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo_cli.py",
+   "source_symbol": "simplicio_loop/turbo_cli.py::run_turbo_command",
+   "target_file": "simplicio_loop/verify.py",
+   "target_symbol": "simplicio_loop/verify.py::run_verify",
+   "line": 21,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo_provider.py",
+   "source_symbol": "simplicio_loop/turbo_provider.py::complete_hedged",
+   "target_file": "simplicio_loop/turbo_provider.py",
+   "target_symbol": "simplicio_loop/turbo_provider.py::complete",
+   "line": 21,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo_provider.py",
+   "source_symbol": "simplicio_loop/turbo_provider.py::complete",
+   "target_file": "simplicio_loop/turbo_provider.py",
+   "target_symbol": "simplicio_loop/turbo_provider.py::model_name",
+   "line": 16,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo_provider.py",
+   "source_symbol": "simplicio_loop/turbo_provider.py::complete",
+   "target_file": "simplicio_loop/turbo_provider.py",
+   "target_symbol": "simplicio_loop/turbo_provider.py::post",
+   "line": 16,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo_provider.py",
+   "source_symbol": "simplicio_loop/turbo_provider.py::complete",
+   "target_file": "simplicio_loop/turbo_provider.py",
+   "target_symbol": "simplicio_loop/turbo_provider.py::require_key",
+   "line": 15,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/turbo_provider.py",
+   "source_symbol": "simplicio_loop/turbo_provider.py::complete",
+   "target_file": "simplicio_loop/turbo_provider.py",
+   "target_symbol": "simplicio_loop/turbo_provider.py::session_id_for",
+   "line": 16,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "simplicio_loop/verify.py",
+   "source_symbol": "simplicio_loop/verify.py::run_verify",
+   "target_file": "simplicio_loop/verify.py",
+   "target_symbol": "simplicio_loop/verify.py::tail",
+   "line": 9,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "tests/test_dev_cli.py",
+   "source_symbol": "tests/test_dev_cli.py::test_check_unique_rejects_missing_and_repeated_text",
+   "target_file": "simplicio_loop/dev_cli.py",
+   "target_symbol": "simplicio_loop/dev_cli.py::check_unique",
+   "line": 5,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "tests/test_dev_cli.py",
+   "source_symbol": "tests/test_dev_cli.py::test_check_unique_rejects_missing_and_repeated_text",
+   "target_file": "simplicio_loop/dev_cli.py",
+   "target_symbol": "simplicio_loop/dev_cli.py::check_unique",
+   "line": 6,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "tests/test_dev_cli.py",
+   "source_symbol": "tests/test_dev_cli.py::test_check_unique_rejects_missing_and_repeated_text",
+   "target_file": "simplicio_loop/dev_cli.py",
+   "target_symbol": "simplicio_loop/dev_cli.py::check_unique",
+   "line": 7,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "imports",
+   "source_file": "tests/test_dev_cli.py",
+   "target_file": "simplicio_loop/dev_cli.py",
+   "resolution_status": "resolved",
+   "evidence_class": "import_resolved"
+  },
+  {
+   "type": "calls",
+   "source_file": "tests/test_turbo_cli.py",
+   "source_symbol": "tests/test_turbo_cli.py::test_build_tasks_numbers_tasks",
+   "target_file": "simplicio_loop/turbo_cli.py",
+   "target_symbol": "simplicio_loop/turbo_cli.py::build_tasks",
+   "line": 9,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "calls",
+   "source_file": "tests/test_turbo_cli.py",
+   "source_symbol": "tests/test_turbo_cli.py::test_mentioned_paths_finds_files",
+   "target_file": "simplicio_loop/turbo_cli.py",
+   "target_symbol": "simplicio_loop/turbo_cli.py::mentioned_paths",
+   "line": 5,
+   "resolution_status": "resolved",
+   "evidence_class": "lexical_unique"
+  },
+  {
+   "type": "imports",
+   "source_file": "tests/test_turbo_cli.py",
+   "target_file": "simplicio_loop/turbo_cli.py",
+   "resolution_status": "resolved",
+   "evidence_class": "import_resolved"
+  }
+ ],
+ "unresolved": [
+  {
+   "source_file": "hooks/loop_stop.py",
+   "queried_symbol": "json",
+   "kind": "import"
+  },
+  {
+   "source_file": "hooks/loop_stop.py",
+   "queried_symbol": "sys",
+   "kind": "import"
+  },
+  {
+   "source_file": "hooks/loop_stop.py",
+   "line": 8,
+   "queried_symbol": "load"
+  },
+  {
+   "source_file": "hooks/loop_stop.py",
+   "line": 14,
+   "queried_symbol": "get"
+  },
+  {
+   "source_file": "hooks/loop_stop.py",
+   "line": 14,
+   "queried_symbol": "get"
+  },
+  {
+   "source_file": "hooks/loop_stop.py",
+   "line": 18,
+   "queried_symbol": "SystemExit"
+  },
+  {
+   "source_file": "simplicio_loop/__init__.py",
+   "line": 1,
+   "queried_symbol": "runner"
+  },
+  {
+   "source_file": "simplicio_loop/cli.py",
+   "queried_symbol": "sys",
+   "kind": "import"
+  },
+  {
+   "source_file": "simplicio_loop/cli.py",
+   "line": 27,
+   "queried_symbol": "SystemExit"
+  },
+  {
+   "source_file": "simplicio_loop/dev_cli.py",
+   "line": 10,
+   "queried_symbol": "append"
+  },
+  {
+   "source_file": "simplicio_loop/dev_cli.py",
+   "line": 18,
+   "queried_symbol": "open"
+  },
+  {
+   "source_file": "simplicio_loop/dev_cli.py",
+   "line": 18,
+   "queried_symbol": "read"
+  },
+  {
+   "source_file": "simplicio_loop/dev_cli.py",
+   "line": 24,
+   "queried_symbol": "open"
+  },
+  {
+   "source_file": "simplicio_loop/dev_cli.py",
+   "line": 25,
+   "queried_symbol": "replace"
+  },
+  {
+   "source_file": "simplicio_loop/dev_cli.py",
+   "line": 25,
+   "queried_symbol": "write"
+  },
+  {
+   "source_file": "simplicio_loop/dev_cli.py",
+   "line": 31,
+   "queried_symbol": "count"
+  },
+  {
+   "source_file": "simplicio_loop/host_mode.py",
+   "line": 6,
+   "queried_symbol": "request"
+  },
+  {
+   "source_file": "simplicio_loop/mapper_client.py",
+   "queried_symbol": "json",
+   "kind": "import"
+  },
+  {
+   "source_file": "simplicio_loop/mapper_client.py",
+   "queried_symbol": "subprocess",
+   "kind": "import"
+  },
+  {
+   "source_file": "simplicio_loop/mapper_client.py",
+   "line": 8,
+   "queried_symbol": "run"
+  },
+  {
+   "source_file": "simplicio_loop/mapper_client.py",
+   "line": 10,
+   "queried_symbol": "RuntimeError"
+  },
+  {
+   "source_file": "simplicio_loop/mapper_client.py",
+   "line": 16,
+   "queried_symbol": "open"
+  },
+  {
+   "source_file": "simplicio_loop/mapper_client.py",
+   "line": 17,
+   "queried_symbol": "load"
+  },
+  {
+   "source_file": "simplicio_loop/mcp_server.py",
+   "queried_symbol": "mcp.server.fastmcp",
+   "kind": "import"
+  },
+  {
+   "source_file": "simplicio_loop/mcp_server.py",
+   "line": 6,
+   "queried_symbol": "FastMCP"
+  },
+  {
+   "source_file": "simplicio_loop/mcp_server.py",
+   "line": 9,
+   "queried_symbol": "tool"
+  },
+  {
+   "source_file": "simplicio_loop/mcp_server.py",
+   "line": 15,
+   "queried_symbol": "tool"
+  },
+  {
+   "source_file": "simplicio_loop/mcp_server.py",
+   "line": 23,
+   "queried_symbol": "run"
+  },
+  {
+   "source_file": "simplicio_loop/orchestrator.py",
+   "line": 9,
+   "queried_symbol": "get"
+  },
+  {
+   "source_file": "simplicio_loop/plan_store.py",
+   "queried_symbol": "json",
+   "kind": "import"
+  },
+  {
+   "source_file": "simplicio_loop/plan_store.py",
+   "line": 7,
+   "queried_symbol": "open"
+  },
+  {
+   "source_file": "simplicio_loop/plan_store.py",
+   "line": 8,
+   "queried_symbol": "load"
+  },
+  {
+   "source_file": "simplicio_loop/prompts.py",
+   "line": 11,
+   "queried_symbol": "join"
+  },
+  {
+   "source_file": "simplicio_loop/prompts.py",
+   "line": 16,
+   "queried_symbol": "join"
+  },
+  {
+   "source_file": "simplicio_loop/prompts.py",
+   "line": 25,
+   "queried_symbol": "append"
+  },
+  {
+   "source_file": "simplicio_loop/prompts.py",
+   "line": 25,
+   "queried_symbol": "open"
+  },
+  {
+   "source_file": "simplicio_loop/prompts.py",
+   "line": 25,
+   "queried_symbol": "read"
+  },
+  {
+   "source_file": "simplicio_loop/prompts.py",
+   "line": 26,
+   "queried_symbol": "join"
+  },
+  {
+   "source_file": "simplicio_loop/report.py",
+   "queried_symbol": "json",
+   "kind": "import"
+  },
+  {
+   "source_file": "simplicio_loop/report.py",
+   "line": 7,
+   "queried_symbol": "dumps"
+  },
+  {
+   "source_file": "simplicio_loop/turbo.py",
+   "line": 19,
+   "queried_symbol": "extend"
+  },
+  {
+   "source_file": "simplicio_loop/turbo.py",
+   "line": 25,
+   "queried_symbol": "range"
+  },
+  {
+   "source_file": "simplicio_loop/turbo_cli.py",
+   "queried_symbol": "re",
+   "kind": "import"
+  },
+  {
+   "source_file": "simplicio_loop/turbo_cli.py",
+   "line": 6,
+   "queried_symbol": "compile"
+  },
+  {
+   "source_file": "simplicio_loop/turbo_cli.py",
+   "line": 33,
+   "queried_symbol": "pop"
+  },
+  {
+   "source_file": "simplicio_loop/turbo_cli.py",
+   "line": 35,
+   "queried_symbol": "pop"
+  },
+  {
+   "source_file": "simplicio_loop/turbo_cli.py",
+   "line": 39,
+   "queried_symbol": "pop"
+  },
+  {
+   "source_file": "simplicio_loop/turbo_cli.py",
+   "line": 41,
+   "queried_symbol": "pop"
+  },
+  {
+   "source_file": "simplicio_loop/turbo_cli.py",
+   "line": 43,
+   "queried_symbol": "strip"
+  },
+  {
+   "source_file": "simplicio_loop/turbo_cli.py",
+   "line": 51,
+   "queried_symbol": "enumerate"
+  },
+  {
+   "source_file": "simplicio_loop/turbo_cli.py",
+   "line": 53,
+   "queried_symbol": "append"
+  },
+  {
+   "source_file": "simplicio_loop/turbo_cli.py",
+   "line": 59,
+   "queried_symbol": "split"
+  },
+  {
+   "source_file": "simplicio_loop/turbo_cli.py",
+   "line": 59,
+   "queried_symbol": "strip"
+  },
+  {
+   "source_file": "simplicio_loop/turbo_cli.py",
+   "line": 59,
+   "queried_symbol": "strip"
+  },
+  {
+   "source_file": "simplicio_loop/turbo_cli.py",
+   "line": 64,
+   "queried_symbol": "findall"
+  },
+  {
+   "source_file": "simplicio_loop/turbo_provider.py",
+   "queried_symbol": "os",
+   "kind": "import"
+  },
+  {
+   "source_file": "simplicio_loop/turbo_provider.py",
+   "line": 9,
+   "queried_symbol": "get"
+  },
+  {
+   "source_file": "simplicio_loop/turbo_provider.py",
+   "line": 10,
+   "queried_symbol": "RuntimeError"
+  },
+  {
+   "source_file": "simplicio_loop/turbo_provider.py",
+   "line": 26,
+   "queried_symbol": "get"
+  },
+  {
+   "source_file": "simplicio_loop/turbo_provider.py",
+   "line": 31,
+   "queried_symbol": "abs"
+  },
+  {
+   "source_file": "simplicio_loop/turbo_provider.py",
+   "line": 31,
+   "queried_symbol": "hash"
+  },
+  {
+   "source_file": "simplicio_loop/verify.py",
+   "queried_symbol": "subprocess",
+   "kind": "import"
+  },
+  {
+   "source_file": "simplicio_loop/verify.py",
+   "line": 7,
+   "queried_symbol": "run"
+  },
+  {
+   "source_file": "simplicio_loop/verify.py",
+   "line": 8,
+   "queried_symbol": "strip"
+  }
+ ],
+ "coverage": {
+  "status": "degraded",
+  "ambiguous_relations": 4,
+  "truncated": false,
+  "observed_edges": 64,
+  "emitted_edges": 64
+ },
+ "producer": {
+  "component": "simplicio-mapper",
+  "version": "0.26.34"
+ }
+}

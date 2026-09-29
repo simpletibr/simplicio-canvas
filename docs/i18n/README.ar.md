@@ -2,17 +2,21 @@
 
 [← English](../../README.md) · **العربية**
 
-برمجة مرئية محلية أولاً: افتح مجلداً وشاهد المشاريع والطبقات والتدفقات والملفات والاستيرادات كقطع مترابطة في Canvas مبني بـ Three.js داخل بيئة شبيهة بـ VS Code.
-
-المثال الافتراضي هو لقطة آمنة من [`wesleysimplicio/simplicio-loop`](https://github.com/wesleysimplicio/simplicio-loop). ويجهّز الإقلاع المخطط أيضاً `simplicio-mapper` ومهارة `simplicio-loop` المحلية.
+عارض تدفقات ثنائي الأبعاد يعمل محليًا. الصق رابط مشروع على GitHub لترى تدفقاته كمخططات (نقطة الدخول ← الخطوات ← الاستدعاءات، مع ما تفعله كل خطوة وشيفرتها)، ثم أعد تشغيل تنفيذ حقيقي أو محاكى خطوة بخطوة، بما في ذلك كل استدعاء لنموذج لغوي.
 
 ```bash
-git clone https://github.com/wesleysimplicio/simplicio-canvas.git
+git clone https://github.com/simpletibr/simplicio-canvas.git
 cd simplicio-canvas && npm install && npm run dev
 ```
 
-يتضمن MVP المجلد المحلي واللغات والاستيرادات والقطع المتحركة والتنقل ثلاثي الأبعاد وExplorer والتبويبات وterminal/editor وInspector والتصميم المتجاوب. يبقى الكود محلياً.
+تشغيل محلي: `npm run dev` → http://127.0.0.1:5173
 
-![Simplicio Canvas IDE](../../output/playwright/vscode-shell-desktop.png)
+- **التدفقات** — بنية المشروع وتدفق لكل نقطة دخول، مع تصدير Mermaid.
+- **إعادة التشغيل** — حمّل ملف `simplicio.trace/v1` أو JSON الذي يطبعه `simplicio-loop turbo`؛ شغّل وأوقف وتقدّم خطوة بخطوة، وشاهد كل استدعاء (النموذج، الرموز، التكلفة، الزمن، النص المرسل والمستلم).
+- **المحاكاة** — اكتب طلبًا وشاهد أين سيذهب ولماذا، دون تشغيل أي شيء.
 
-[Roadmap](https://github.com/wesleysimplicio/simplicio-canvas/issues) · [MIT](../../LICENSE)
+يبقى الكود على جهازك: الملفات تُقرأ في المتصفح ولا تُرفع.
+
+![Simplicio Canvas](../images/flows.png)
+
+[صيغة التتبع](../trace-format.md) · [المحاكاة](../simulation.md) · [MIT](../../LICENSE)

@@ -1,75 +1,72 @@
-# Simplicio Canvas — product and architecture plan
+# Simplicio Canvas — product and architecture
+
+> The earlier direction (3D "puzzle pieces", visual editing of code) is in git history at `d680542`. Canvas is now a simple,
+> local-first **2D flow viewer**: this document is its current scope.
 
 ## Vision
 
-Programming becomes assembly: a repository is parsed into typed puzzle pieces, interfaces become compatible tabs and sockets, dependencies become visible flows, and AI proposes safe graph transformations instead of opaque line edits.
+A person pastes a GitHub project link and sees **how the software flows**: the architecture, and for each entry point a
+flowchart of entry → steps → calls with what every step does and its source. The same canvas replays **what really
+happened** when someone asked a tool (a script, a CLI, an MCP server, `simplicio-loop`) for something — step by step,
+including every LLM call — and can **simulate** a request without running anything, explaining each step in plain
+language. Think "dynamic Mermaid".
 
-## Visual grammar
+## Views
 
-Color communicates architectural layer; silhouette communicates software responsibility; tabs are provided contracts; sockets are required contracts; glowing tubes are runtime/static flows; distance means boundary; height means abstraction; opacity means confidence.
-
-| Layer | Color | Meaning |
+| View | Source | What it shows |
 |---|---|---|
-| Presentation | coral `#ff5d73` | screens, CLI, controllers, events |
-| Application | amber `#ffb547` | use cases, orchestration, services |
-| Domain | mint `#67e8a5` | entities, value objects, rules |
-| Infrastructure | blue `#58a6ff` | repositories, adapters, external APIs |
-| Tests | violet `#c084fc` | contracts, scenarios, evidence |
-| Docs | ivory `#f4e8c1` | decisions, specifications, guides |
-| Config | slate `#8b9aab` | composition, policy, deployment |
+| Architecture | files, imports (Python resolved precisely, other languages from Mapper and the analyzer) | folders as collapsible groups, import edges, layer colours |
+| Flows | Mapper `symbol-index` + `call-graph` | one flow per entry point (console script, CLI command, MCP tool, `main`, any function), depth-limited, expandable |
+| Run → Real | a `simplicio.trace/v1` file, or the JSON of `simplicio-loop turbo` | the run as a flow plus a player; LLM calls with model, tokens, cost, latency, previews |
+| Run → Simulated | a request + a flow | the steps the request would take, each with an explanation and `?` on what cannot be known |
 
-Piece types: screen emits `event→command`; controller maps `request→use-case`; use-case maps `command→domain-call`; service maps `domain-call→result`; entity maps `rule→state`; repository maps `query→entity`; adapter maps `port→external`; test maps `contract→evidence`; config maps `option→policy`; module maps `import→export`.
+Every view exports **Mermaid** flowchart text.
 
-## Canonical architecture
+## Contracts
+
+- **`simplicio.trace/v1`** ([trace-format.md](trace-format.md)): one JSON event per line; the only input the replay needs.
+  Everything that wants to be visualised converts to it (`simplicio-loop turbo` documents do, in `src/domain/turbo.ts`).
+- **Mapper artifacts** (`project-map`, `call-graph`, `symbol-index`): read defensively (`src/domain/mapper.ts`); a missing or
+  truncated artifact degrades the view and says so, it never fabricates data.
+- **FlowGraph** (`src/domain/flow-graph.ts`): the renderer-neutral graph every builder produces and the canvas, the
+  Mermaid export and the simulator consume.
+
+## Architecture
 
 ```mermaid
 flowchart LR
-  FS["Project folder"] --> SCAN["Language scanners"]
-  SCAN --> IR["Canonical graph IR"]
-  IR --> RULES["Architecture rules"]
-  IR --> VIEW["Three.js canvas"]
-  VIEW --> EDIT["Visual graph operations"]
-  EDIT --> PLAN["Deterministic change plan"]
-  PLAN --> PREVIEW["Diff preview + validation"]
-  PREVIEW --> APPLY["Explicit local apply"]
-  AI["AI planner"] --> PLAN
-  IR --> AI
+  BR["local bridge: shallow clone + simplicio-mapper"] --> PJ["Project model"]
+  FO["folder picker"] --> PJ
+  PJ --> ARCH["architecture builder"]
+  PJ --> FLOW["entry-point flow builder"]
+  PJ --> SIM["simulator"]
+  TR["trace file / turbo JSON"] --> IMP["trace parser + turbo importer"]
+  IMP --> TF["trace → flow"]
+  ARCH --> FG["FlowGraph"]
+  FLOW --> FG
+  TF --> FG
+  SIM --> FG
+  SIM --> PL["player state machine"]
+  IMP --> PL
+  FG --> LAY["dagre layout"]
+  LAY --> RF["React Flow canvas"]
+  FG --> MM["Mermaid export"]
+  PL --> RF
 ```
 
-The canonical graph IR is the product boundary. Web, VS Code, Cursor and future renderers must consume the same versioned schema. The original project is read-only; demos use a generated path/symbol snapshot with provenance and ignore rules.
-
-## Semantic zoom — the primary interaction model
-
-Zoom is not camera magnification; it changes the semantic representation while preserving spatial context and the selected object.
-
-| Level | Approximate scale | Visible objects | Visible relations | Main action |
-|---|---:|---|---|---|
-| Z0 Ecosystem | 0–20% | repositories as single recognizable solids | repository dependencies, APIs and shared packages | select/open a project |
-| Z1 Project | 20–45% | bounded contexts, architectural layers and entry points | major request, event, data and control flows | select/isolate a flow |
-| Z2 Flow | 45–75% | use cases, services, queues, databases and files participating in the flow | calls, publishes, reads, writes, implements and verifies | edit/reverse/add a relation |
-| Z3 Symbol | 75–100% | files expanded into imports, classes, functions, methods and tests | imports, calls, inheritance, implementation and symbol references | edit code or graph operation |
-
-Transitions must use animated morphing and hysteresis so objects do not flicker near a threshold. A project piece expands in place into layers; a layer expands into flows; a flow expands into ordered files; a file unfolds into symbols and a local code editor. Breadcrumbs and a minimap always show `ecosystem / project / flow / file / symbol`.
-
-Connections are typed, directional and editable. Arrow shape and motion distinguish `import`, `call`, `data`, `event`, `implements`, `inherits`, `reads`, `writes` and `verifies`. Selecting an edge shows its source location and evidence. Reversing or drawing an arrow creates a proposed code transformation; it never silently changes a dependency. The proposal must show imports to add/remove, affected symbols, architectural violations, diff, tests and an explicit apply button.
-
-Selecting a file exposes all imports it loads and all reverse importers. Selecting a class exposes constructor dependencies, inheritance, implemented interfaces, methods, callers, tests and related runtime/static flows. Double-click opens an embedded editor at the symbol; edits reparse the graph incrementally. Dragging a class between layers is interpreted as a refactor proposal, not as visual-only movement.
-
-Every node and edge has stable identity across rescans. Layout is deterministic and hierarchical, with manual positions stored separately from source truth. Static analysis is authoritative for code relations; inferred AI relations are visibly marked with confidence until verified.
+Rules: `src/domain` is pure TypeScript and never imports UI code; builders produce the graph, renderers consume it; the
+simulator and importers never execute anything; nothing leaves the browser except the request to the local bridge.
 
 ## Non-functional requirements
 
-- Local-first and private by default; no source upload without explicit consent.
-- 5k nodes interactive at 45+ FPS on a typical developer laptop; clustering above 500 nodes.
-- Incremental re-scan under 500 ms for a changed file after warm-up.
-- Every AI edit has plan, diff, impacted tests, validation evidence and undo checkpoint.
-- Keyboard navigation, reduced-motion mode, high-contrast palette and non-color layer labels.
-- Scanner fixtures for Python and TypeScript; graph schema backward compatibility tests.
+- Local-first and private: no source, trace or artifact upload; production builds carry a CSP limited to their own origin.
+- Interactive at project scale: 1,500 files / 4,500 symbols model in well under a second; overview layouts in milliseconds
+  (see `tests/render-benchmark.test.ts`).
+- Keyboard-reachable canvas and controls, a polite live region for the current replay step, reduced-motion support, and
+  non-colour cues (kind labels, "?" and dashed borders for unknown steps).
+- Interface languages: Portuguese (Brazil) and English.
 
-## Out of scope before M3
+## Out of scope for now
 
-Real-time multi-user collaboration, cloud indexing, marketplace, autonomous code apply, arbitrary language support, and runtime tracing in production.
-
-## Release gates
-
-Each milestone exits only with all child tasks done, unit/domain coverage >=80%, clean build, real browser evidence, zero high-severity dependency findings, and an updated demo snapshot that never contains secrets or source bodies.
+Editing or generating code from the canvas, real-time collaboration, cloud indexing, running commands or models, HTTP
+routes as entry points, live tailing of traces (a next layer), and the proxy that records LLM calls for arbitrary apps.

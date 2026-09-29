@@ -1,0 +1,1 @@
+{"schema":"simplicio.turbo-run/v1","repo":"/work/tiny","model":"deepseek/deepseek-v4.1-flash","reasoning":"off","session_pinned":true,"status":"blocked","reason_code":"turbo_provider_key_missing","detail":"set OPENROUTER_API_KEY (OpenRouter) so simplicio-loop turbo can call deepseek/deepseek-v4.1-flash","fix":"export OPENROUTER_API_KEY=<your OpenRouter key>"}
